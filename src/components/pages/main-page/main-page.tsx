@@ -16,7 +16,7 @@ function MainPage({cardsAmount}: MainPageProps): ReactElement {
         <div className='container'>
           <div className='header__wrapper'>
             <div className='header__left'>
-              <a className='header__logo-link header__logo-link--active'>
+              <a className='header__logo-link header__logo-link--active' href='/'>
                 <img className='header__logo' src='/img/logo.svg' alt='6 cities logo' width='81' height='41' />
               </a>
             </div>
@@ -101,7 +101,14 @@ function MainPage({cardsAmount}: MainPageProps): ReactElement {
               </form>
               <div className='cities__places-list places__list tabs__content'>
                 {cards.map((card) => (
-                  <PlaceCard key={card.id} {...card} />
+                  <PlaceCard
+                    key={card.id}
+                    id={card.id}
+                    previewImage={card.previewImage}
+                    rating={card.rating}
+                    title={card.title}
+                    price={card.price}
+                  />
                 ))}
               </div>
             </section>

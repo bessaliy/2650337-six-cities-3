@@ -1,9 +1,8 @@
 import { ReactElement } from 'react';
 import { Offer } from '../../types/offer.ts';
+import { getRatingWidth } from '../../utils.ts';
 
 function PlaceCard(props: Offer): ReactElement {
-  const ratingWidth = `${Math.round(props.rating) * 20}%`;
-
   return (
     <article className='cities__card place-card'>
       <div className='place-card__mark'>
@@ -29,7 +28,7 @@ function PlaceCard(props: Offer): ReactElement {
         </div>
         <div className='place-card__rating rating'>
           <div className='place-card__stars rating__stars'>
-            <span style={{width: ratingWidth}}></span>
+            <span style={{width: getRatingWidth(props)}}></span>
             <span className='visually-hidden'>Rating</span>
           </div>
         </div>
