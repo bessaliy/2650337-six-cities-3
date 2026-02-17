@@ -101,7 +101,14 @@ function MainPage({cardsAmount}: MainPageProps): ReactElement {
               </form>
               <div className='cities__places-list places__list tabs__content'>
                 {cards.map((card) => (
-                  <PlaceCard key={card.id} {...card} />
+                  <PlaceCard
+                    key={card.id}
+                    id={card.id}
+                    previewImage={card.previewImage}
+                    rating={card.rating}
+                    title={card.title}
+                    price={card.price}
+                  />
                 ))}
               </div>
             </section>
