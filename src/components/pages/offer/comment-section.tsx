@@ -13,7 +13,9 @@ function CommentSection(): ReactElement {
       method='post'
       onSubmit={(e) => e.preventDefault()}
     >
+
       <label className='reviews__label form__label' htmlFor='review'>Your review</label>
+
       <div className='reviews__rating-form form__rating'>
         <input
           className='form__rating-input visually-hidden'
@@ -89,7 +91,9 @@ function CommentSection(): ReactElement {
             <use xlinkHref='#icon-star'></use>
           </svg>
         </label>
+
       </div>
+
       <textarea
         className='reviews__textarea form__textarea'
         id='review'
@@ -98,11 +102,14 @@ function CommentSection(): ReactElement {
         value={formContent}
         onChange={(e) => setFormContent(e.target.value)}
       />
+
       <div className='reviews__button-wrapper'>
+
         <p className='reviews__help'>
           To submit review please make sure to set <span className='reviews__star'>rating</span> and describe your stay
           with at least <b className='reviews__text-amount'>50 characters</b>.
         </p>
+
         <button
           className='reviews__submit form__submit button'
           type='submit'
@@ -110,6 +117,7 @@ function CommentSection(): ReactElement {
         >
           Submit
         </button>
+
       </div>
     </form>
   );

@@ -4,7 +4,6 @@ export const Setting = {
   cardsAmount: 5
 };
 
-
 export const CITIES: City[] = [
   {
     name: 'Paris',
@@ -68,3 +67,32 @@ export enum AuthStatus {
   NoAuth = 'NO_AUTH',
   Unknown = 'UNKNOWN'
 }
+
+export enum MapName {
+  Cities = 'cities',
+  Offers = 'offer',
+}
+
+export enum ViewModeNames {
+  Cities = 'CitiesView',
+  Favorites = 'FavoritesView',
+  Offers = 'OffersView',
+}
+
+export const ViewMode = {
+  CitiesView: {
+    name: 'cities',
+    width: 260,
+    height: 200,
+  },
+  FavoritesView: {
+    name: 'favorites',
+    width: 150,
+    height: 110,
+  },
+  OffersView: {
+    name: 'near-places',
+    width: 260,
+    height: 200,
+  },
+};

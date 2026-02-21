@@ -19,14 +19,28 @@ type AppProps = {
 }
 
 function App({cardsAmount, offers}: AppProps): ReactElement {
-  const isAuth = AuthStatus.NoAuth;
-  // const isAuth = AuthStatus.Auth;
+  // const isAuth = AuthStatus.NoAuth;
+  const isAuth = AuthStatus.Auth;
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={AppRoute.MainPage} element={<MainPage offers={offers} cardsAmount={cardsAmount}/>} />
-        <Route path={AppRoute.LoginPage} element={<LoginPage />} />
+
+        <Route
+          path={AppRoute.MainPage}
+          element={
+            <MainPage
+              offers={offers}
+              cardsAmount={cardsAmount}
+            />
+          }
+        />
+
+        <Route
+          path={AppRoute.LoginPage}
+          element={<LoginPage />}
+        />
+
         <Route
           path={AppRoute.FavoritesPage}
           element={
@@ -35,8 +49,17 @@ function App({cardsAmount, offers}: AppProps): ReactElement {
             </PrivateRoute>
           }
         />
-        <Route path={AppRoute.OfferPage} element={<OfferPage offers={offers} />} />
-        <Route path='*' element={<PageNotFound />} />
+
+        <Route
+          path={AppRoute.OfferPage}
+          element={<OfferPage offers={offers} />}
+        />
+
+        <Route
+          path='*'
+          element={<PageNotFound />}
+        />
+
       </Routes>
     </BrowserRouter>
   );

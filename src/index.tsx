@@ -10,6 +10,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
+
     <App offers={mockData} cardsAmount={Setting.cardsAmount} />
+
   </React.StrictMode>
 );
