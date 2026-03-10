@@ -6,7 +6,6 @@ type ReviewItemProp = {
   data: Review;
 }
 
-// function ReviewItem(props: ReviewItemProp): ReactElement {
 function ReviewItem({data}: ReviewItemProp): ReactElement {
   return (
     <li className='reviews__item'>

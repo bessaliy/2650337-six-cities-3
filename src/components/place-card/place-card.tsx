@@ -24,8 +24,6 @@ const CardMode = {
 type PlaceCardProps = {
   data: Offer;
   onHoverToggle?: (id: string | null) => void;
-  // onHover?: (id: string) => void;
-  // onLeave?: () => void;
   viewMode: keyof typeof CardMode;
 }
 
