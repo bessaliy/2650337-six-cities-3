@@ -1,4 +1,4 @@
-import {ReactElement, useMemo, useState, useEffect} from 'react';
+import {ReactElement, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {AuthStatus, MapName, SortingType} from '../../../const.ts';
 import {RootState} from '../../../store';
@@ -21,12 +21,6 @@ function MainPage({isAuth}: MainPageProps): ReactElement {
 
   const offers = useSelector((state: RootState) => state.offers);
   const city = useSelector((state: RootState) => state.city);
-
-  // Вопрос - надо ли скидывать сортировку при смене города?
-
-  useEffect(() => {
-    setSortingType(SortingType.Popular);
-  }, [city]);
 
   const filteredOffers = useMemo(
     () => offers.filter((offer) => offer.city.name === city.name),
