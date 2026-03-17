@@ -63,6 +63,7 @@ function OfferPage({isAuth}: OfferPageProps): ReactElement {
             offers={mapOffers}
             selectedOfferId={offer.id}
             mapName={MapName.Offers}
+            city={offer.city}
           />
 
         </section>

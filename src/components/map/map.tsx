@@ -3,11 +3,13 @@ import leaflet, {Map as LeafletMap, LayerGroup} from 'leaflet';
 import {Offer} from '../../types/offer.ts';
 import pin from '../../assets/img/pin.svg';
 import pinActive from '../../assets/img/pin-active.svg';
+import {City} from '../../types/city.ts';
 
 type MapProps = {
   offers: Offer[];
   selectedOfferId: string | null;
   mapName: string;
+  city: City;
 };
 
 const defaultIcon = leaflet.icon({
@@ -22,10 +24,23 @@ const activeIcon = leaflet.icon({
   iconAnchor: [13, 39],
 });
 
-function Map({ offers, selectedOfferId, mapName }: MapProps): ReactElement {
+function Map({ offers, selectedOfferId, mapName, city }: MapProps): ReactElement {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const leafletMapRef = useRef<LeafletMap | null>(null);
   const markersLayerRef = useRef<LayerGroup | null>(null);
+
+  useEffect(() => {
+    const map = leafletMapRef.current;
+
+    if (!map) {
+      return;
+    }
+
+    map.setView(
+      [city.location.latitude, city.location.longitude],
+      city.location.zoom
+    );
+  }, [city]);
 
   useEffect(() => {
     if (!mapRef.current || leafletMapRef.current) {
@@ -33,8 +48,8 @@ function Map({ offers, selectedOfferId, mapName }: MapProps): ReactElement {
     }
 
     const map = leaflet.map(mapRef.current, {
-      center: [52.3909553943508, 4.85309666406198],
-      zoom: 12,
+      center: [city.location.latitude, city.location.longitude],
+      zoom: city.location.zoom,
     });
 
     markersLayerRef.current = leaflet.layerGroup().addTo(map);

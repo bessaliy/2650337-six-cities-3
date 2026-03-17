@@ -57,10 +57,18 @@ function MainPage({isAuth}: MainPageProps): ReactElement {
                 onSortingChange={setSortingType}
               />
 
-              <PlaceCardList
-                offers={sortedOffers}
-                onHoverToggle={setActiveOfferId}
-              />
+              {filteredOffers.length === 0 ? (
+                <div className="cities__places-container container">
+                  <section className="cities__no-places">
+                    <b>No places to stay available</b>
+                  </section>
+                </div>
+              ) : (
+                <PlaceCardList
+                  offers={sortedOffers}
+                  onHoverToggle={setActiveOfferId}
+                />
+              )}
 
             </section>
 
@@ -69,6 +77,7 @@ function MainPage({isAuth}: MainPageProps): ReactElement {
                 offers={sortedOffers}
                 selectedOfferId={activeOfferId}
                 mapName={MapName.Cities}
+                city={city}
               />
             </div>
 
