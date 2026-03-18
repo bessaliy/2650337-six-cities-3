@@ -4,12 +4,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import Location from './location.tsx';
 import {CITIES} from '../../../const.ts';
 import {RootState} from '../../../store';
-import {setActiveCity} from '../../../store/action.ts';
+import {setActiveCity} from '../../../store/reducer.ts';
 
 function Locations(): ReactElement {
   const dispatch = useDispatch();
-  const activeCity = useSelector((state: RootState) => state.city);
-
+  const activeCity = useSelector((state: RootState) => state.offers.city);
   return (
     <section className='locations container'>
 

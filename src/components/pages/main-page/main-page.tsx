@@ -1,8 +1,10 @@
-import {ReactElement, useMemo, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {ReactElement, useMemo, useState, useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import {AuthStatus, MapName, SortingType} from '../../../const.ts';
 import {RootState} from '../../../store';
 import {getSortedOffers} from '../../../utils.ts';
+import {fetchOffers} from '../../../store/api-actions.ts';
+import {AppDispatch} from '../../../store';
 
 import PlaceCardList from '../../place-card/place-card-list.tsx';
 import Map from '../../map/map.tsx';
@@ -14,13 +16,16 @@ import PlacesSorting from './places-sorting.tsx';
 type MainPageProps = {
   isAuth: AuthStatus;
 }
+function Spinner() {
+  return <div>Loading...</div>;
+}
 
 function MainPage({isAuth}: MainPageProps): ReactElement {
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
   const [sortingType, setSortingType] = useState<SortingType>(SortingType.Popular);
 
-  const offers = useSelector((state: RootState) => state.offers);
-  const city = useSelector((state: RootState) => state.city);
+  const offers = useSelector((state: RootState) => state.offers.offers);
+  const city = useSelector((state: RootState) => state.offers.city);
 
   const filteredOffers = useMemo(
     () => offers.filter((offer) => offer.city.name === city.name),
@@ -28,6 +33,17 @@ function MainPage({isAuth}: MainPageProps): ReactElement {
   );
 
   const sortedOffers = getSortedOffers(filteredOffers, sortingType);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchOffers());
+  }, [dispatch]);
+
+  const isLoading = useSelector((state: RootState) => state.offers.isLoading);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className='page page--gray page--main'>
@@ -57,10 +73,18 @@ function MainPage({isAuth}: MainPageProps): ReactElement {
                 onSortingChange={setSortingType}
               />
 
-              <PlaceCardList
-                offers={sortedOffers}
-                onHoverToggle={setActiveOfferId}
-              />
+              {filteredOffers.length === 0 ? (
+                <div className="cities__places-container container">
+                  <section className="cities__no-places">
+                    <b>No places to stay available</b>
+                  </section>
+                </div>
+              ) : (
+                <PlaceCardList
+                  offers={sortedOffers}
+                  onHoverToggle={setActiveOfferId}
+                />
+              )}
 
             </section>
 
@@ -69,6 +93,7 @@ function MainPage({isAuth}: MainPageProps): ReactElement {
                 offers={sortedOffers}
                 selectedOfferId={activeOfferId}
                 mapName={MapName.Cities}
+                city={city}
               />
             </div>
 

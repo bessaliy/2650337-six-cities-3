@@ -1,5 +1,6 @@
 import {ReactElement} from 'react';
 import {Offer} from '../../../types/offer.ts';
+import {CITIES} from '../../../const.ts';
 
 import FavoritesCityGroup from './favorites-city-group.tsx';
 
@@ -13,7 +14,20 @@ function FavoritesList({offers}: FavoritesListProps): ReactElement {
       <h1 className='favorites__title'>Saved listing</h1>
 
       <ul className='favorites__list'>
-        <FavoritesCityGroup offers={offers} />
+        {CITIES.map((city) => {
+          const cityOffers = offers.filter(
+            (offer) => offer.city.name === city.name
+          );
+
+          return (
+            <FavoritesCityGroup
+              key={city.name}
+              offers={cityOffers}
+              city={city}
+            />
+          );
+        })}
+
       </ul>
 
     </section>
