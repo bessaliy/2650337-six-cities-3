@@ -9,6 +9,7 @@ export type State = {
   offers: Offer[];
   isLoading: boolean;
   authorizationStatus: AuthStatus;
+  userEmail: string | null;
 };
 
 const initialState: State = {
@@ -16,6 +17,7 @@ const initialState: State = {
   offers: [],
   isLoading: false,
   authorizationStatus: AuthStatus.Unknown,
+  userEmail: null,
 };
 
 const offerSlice = createSlice({
@@ -27,6 +29,9 @@ const offerSlice = createSlice({
     },
     setAuthorizationStatus(state, action: PayloadAction<AuthStatus>) {
       state.authorizationStatus = action.payload;
+    },
+    setUserEmail(state, action: PayloadAction<string | null>) {
+      state.userEmail = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -43,5 +48,5 @@ const offerSlice = createSlice({
   },
 });
 
-export const {setActiveCity, setAuthorizationStatus} = offerSlice.actions;
+export const {setActiveCity, setAuthorizationStatus, setUserEmail} = offerSlice.actions;
 export default offerSlice.reducer;
