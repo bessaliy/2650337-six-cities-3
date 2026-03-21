@@ -1,18 +1,21 @@
 import {ReactElement} from 'react';
 import {Navigate} from 'react-router-dom';
 import {AppRoute, AuthStatus} from '../../const.ts';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store';
 
 type PrivateRouteProps = {
-  isAuth: AuthStatus;
   children: ReactElement;
 };
 
-function PrivateRoute({ isAuth, children }: PrivateRouteProps): ReactElement {
-  if (isAuth === AuthStatus.Unknown) {
+function PrivateRoute({ children }: PrivateRouteProps): ReactElement {
+  const authorizationStatus = useSelector((state: RootState) => state.offers.authorizationStatus);
+
+  if (authorizationStatus === AuthStatus.Unknown) {
     return <div>Loading...</div>;
   }
 
-  if (isAuth === AuthStatus.NoAuth) {
+  if (authorizationStatus === AuthStatus.NoAuth) {
     return <Navigate to={AppRoute.LoginPage} replace />;
   }
 

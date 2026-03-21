@@ -1,6 +1,8 @@
 import {ReactElement, useEffect} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {useDispatch} from 'react-redux';
+import {AppDispatch} from '../../store';
+import {checkAuth} from '../../store/api-actions.ts';
 
 import MainPage from '../pages/main-page/main-page.tsx';
 import LoginPage from '../pages/login/login-page.tsx';
@@ -10,18 +12,21 @@ import PageNotFound from '../pages/not-found/page-not-found.tsx';
 
 import PrivateRoute from '../private-route/private-route.tsx';
 
-import {AppRoute, AuthStatus} from '../../const.ts';
+import {AppRoute} from '../../const.ts';
 import {mockData} from '../../mock/mock-data.ts';
 import {setOffers} from '../../store/action.ts';
 
 
 function App(): ReactElement {
-  // const isAuth = AuthStatus.NoAuth;
-  const isAuth = AuthStatus.Auth;
-  const dispatch = useDispatch();
+
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     dispatch(setOffers(mockData));
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(checkAuth());
   }, [dispatch]);
 
   return (
@@ -29,7 +34,7 @@ function App(): ReactElement {
       <Routes>
         <Route
           path={AppRoute.MainPage}
-          element={ <MainPage isAuth={isAuth} /> }
+          element={ <MainPage /> }
         />
 
         <Route
@@ -40,15 +45,15 @@ function App(): ReactElement {
         <Route
           path={AppRoute.FavoritesPage}
           element={
-            <PrivateRoute isAuth={isAuth}>
-              <FavoritesPage isAuth={isAuth} />
+            <PrivateRoute>
+              <FavoritesPage />
             </PrivateRoute>
           }
         />
 
         <Route
           path={AppRoute.OfferPage}
-          element={<OfferPage isAuth={isAuth} />}
+          element={<OfferPage />}
         />
 
         <Route

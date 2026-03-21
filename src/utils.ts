@@ -20,6 +20,9 @@ export function getReviewDate(date: string): string {
     year: 'numeric',
   });
 }
+export function getCapitalized(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
 
 export function getSortedOffers(offers: Offer[], sortingType: SortingType): Offer[] {
   const sortedOffers = [...offers];

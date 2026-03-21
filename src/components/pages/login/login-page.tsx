@@ -1,8 +1,30 @@
 import { ReactElement } from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Navigate} from 'react-router-dom';
 import Header from '../../layout/header.tsx';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from '../../../store';
+import {login} from '../../../store/api-actions.ts';
+import {AppRoute, AuthStatus} from '../../../const.ts';
 
 function LoginPage(): ReactElement {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    const formData = new FormData(evt.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    dispatch(login({email, password}));
+  };
+  const authorizationStatus = useSelector(
+    (state: RootState) => state.offers.authorizationStatus
+  );
+  if (authorizationStatus === AuthStatus.Auth) {
+    return <Navigate to={AppRoute.MainPage} />;
+  }
+
   return (
     <div className='page page--gray page--login'>
 
@@ -17,7 +39,7 @@ function LoginPage(): ReactElement {
 
           <section className='login'>
             <h1 className='login__title'>Sign in</h1>
-            <form className='login__form form' action='#' method='post'>
+            <form className='login__form form' onSubmit={handleSubmit}>
 
               <div className='login__input-wrapper form__input-wrapper'>
                 <label className='visually-hidden'>E-mail</label>

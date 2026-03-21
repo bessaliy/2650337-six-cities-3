@@ -1,10 +1,11 @@
-import {ReactElement, useMemo, useState, useEffect} from 'react';
+import {ReactElement, useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {AuthStatus, MapName, SortingType} from '../../../const.ts';
+import {MapName, SortingType} from '../../../const.ts';
 import {RootState} from '../../../store';
 import {getSortedOffers} from '../../../utils.ts';
 import {fetchOffers} from '../../../store/api-actions.ts';
 import {AppDispatch} from '../../../store';
+import {getFilteredOffers} from '../../../store/selectors.ts';
 
 import PlaceCardList from '../../place-card/place-card-list.tsx';
 import Map from '../../map/map.tsx';
@@ -12,28 +13,19 @@ import Header from '../../layout/header.tsx';
 import UserNav from '../../layout/user-nav.tsx';
 import Locations from './locations.tsx';
 import PlacesSorting from './places-sorting.tsx';
+import Spinner from '../../ui/spinner/spinner.tsx';
 
-type MainPageProps = {
-  isAuth: AuthStatus;
-}
-function Spinner() {
-  return <div>Loading...</div>;
-}
-
-function MainPage({isAuth}: MainPageProps): ReactElement {
+function MainPage(): ReactElement {
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
   const [sortingType, setSortingType] = useState<SortingType>(SortingType.Popular);
 
-  const offers = useSelector((state: RootState) => state.offers.offers);
   const city = useSelector((state: RootState) => state.offers.city);
 
-  const filteredOffers = useMemo(
-    () => offers.filter((offer) => offer.city.name === city.name),
-    [offers, city.name]
-  );
+  const filteredOffers = useSelector(getFilteredOffers);
 
   const sortedOffers = getSortedOffers(filteredOffers, sortingType);
   const dispatch = useDispatch<AppDispatch>();
+  const authorizationStatus = useSelector((state: RootState) => state.offers.authorizationStatus);
 
   useEffect(() => {
     dispatch(fetchOffers());
@@ -50,7 +42,7 @@ function MainPage({isAuth}: MainPageProps): ReactElement {
 
       <header className='header'>
         <div className='container'>
-          <Header rightSlot={<UserNav isAuth={isAuth}/>} />
+          <Header rightSlot={<UserNav isAuth={authorizationStatus}/>} />
         </div>
       </header>
 

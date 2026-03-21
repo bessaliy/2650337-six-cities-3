@@ -2,7 +2,7 @@ import {ReactElement} from 'react';
 import {useParams} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 
-import {MapName, CardView, AuthStatus, NearbyLimits} from '../../../const.ts';
+import {MapName, CardView, NearbyLimits} from '../../../const.ts';
 import {MockReviews} from '../../../mock/mock-reviews.ts';
 
 import Header from '../../layout/header.tsx';
@@ -14,11 +14,8 @@ import ReviewsList from './reviews-list.tsx';
 import OfferGallery from './offer-gallery.tsx';
 import {RootState} from '../../../store';
 
-type OfferPageProps = {
-  isAuth: AuthStatus;
-}
 
-function OfferPage({isAuth}: OfferPageProps): ReactElement {
+function OfferPage(): ReactElement {
   const {id} = useParams<{ id: string }>();
   const offers = useSelector((state: RootState) => state.offers.offers);
 
@@ -29,6 +26,7 @@ function OfferPage({isAuth}: OfferPageProps): ReactElement {
     : [];
 
   const mapOffers = offer ? [offer, ...nearbyPlaces] : [];
+  const authorizationStatus = useSelector((state: RootState) => state.offers.authorizationStatus);
 
   if (!offer) {
     return <div>Offer not found</div>;
@@ -38,7 +36,7 @@ function OfferPage({isAuth}: OfferPageProps): ReactElement {
     <div className='page'>
       <header className='header'>
         <div className='container'>
-          <Header rightSlot={<UserNav isAuth={isAuth}/>}/>
+          <Header rightSlot={<UserNav isAuth={authorizationStatus}/>}/>
         </div>
       </header>
 
