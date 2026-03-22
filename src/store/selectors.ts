@@ -12,5 +12,24 @@ export const getFilteredOffers = createSelector(
 
 export const getFavorites = createSelector(
   [getOffers],
-  (offers) => offers.filter((offer) => offer.isFavorite)
+  (offers) => {
+    const favorites = offers.filter((offer) => offer.isFavorite);
+
+    const grouped: Record<string, typeof favorites> = {};
+
+    favorites.forEach((offer) => {
+      const city = offer.city.name;
+
+      if (!grouped[city]) {
+        grouped[city] = [];
+      }
+
+      grouped[city].push(offer);
+    });
+
+    return Object.entries(grouped).map(([city, cityOffers]) => ({
+      city,
+      offers: cityOffers,
+    }));
+  }
 );

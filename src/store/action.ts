@@ -6,3 +6,4 @@ export const setActiveCity = createAction<City>('city/changeCity');
 
 export const setOffers = createAction<Offer[]>('offers/setOffers');
 
+

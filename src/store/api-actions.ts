@@ -1,7 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {Offer} from '../types/offer';
 import {AxiosInstance} from 'axios';
-import {setAuthorizationStatus, setUserEmail} from './reducer.ts';
+import {setAuthorizationStatus, setLoginError, setUserEmail} from './reducer.ts';
 import {AuthStatus} from '../const.ts';
 import {AuthData} from '../types/auth.ts';
 
@@ -25,8 +25,9 @@ export const checkAuth = createAsyncThunk<
   'user/checkAuth',
   async (_arg, {dispatch, extra: api}) => {
     try {
-      await api.get('/login');
+      const {data} = await api.get<AuthData>('/login');
       dispatch(setAuthorizationStatus(AuthStatus.Auth));
+      dispatch(setUserEmail(data.email));
     } catch {
       dispatch(setAuthorizationStatus(AuthStatus.NoAuth));
     }
@@ -46,10 +47,10 @@ export const login = createAsyncThunk<
       localStorage.setItem('token', data.token);
       dispatch(setAuthorizationStatus(AuthStatus.Auth));
       dispatch(setUserEmail(data.email));
+      dispatch(setLoginError(null));
 
     } catch (error) {
-      void 0;
-      // а вообще чего мы тут делать то должны? показывать ошибку что емейл/пароль неверный или нет?
+      dispatch(setLoginError('Неверный email или пароль'));
     }
   }
 );

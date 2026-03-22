@@ -10,6 +10,7 @@ export type State = {
   isLoading: boolean;
   authorizationStatus: AuthStatus;
   userEmail: string | null;
+  loginError: string | null;
 };
 
 const initialState: State = {
@@ -18,6 +19,7 @@ const initialState: State = {
   isLoading: false,
   authorizationStatus: AuthStatus.Unknown,
   userEmail: null,
+  loginError: null,
 };
 
 const offerSlice = createSlice({
@@ -32,6 +34,9 @@ const offerSlice = createSlice({
     },
     setUserEmail(state, action: PayloadAction<string | null>) {
       state.userEmail = action.payload;
+    },
+    setLoginError(state, action: PayloadAction<string | null>) {
+      state.loginError = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -48,5 +53,10 @@ const offerSlice = createSlice({
   },
 });
 
-export const {setActiveCity, setAuthorizationStatus, setUserEmail} = offerSlice.actions;
+export const {
+  setActiveCity,
+  setAuthorizationStatus,
+  setUserEmail,
+  setLoginError
+} = offerSlice.actions;
 export default offerSlice.reducer;

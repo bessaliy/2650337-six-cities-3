@@ -34,9 +34,14 @@ function UserNav({isAuth}: UserNavProps):ReactElement {
           </li>
 
           <li className='header__nav-item'>
-            <a className='header__nav-link' onClick={handleLogout}>
+            <Link className='header__nav-link' to='#'
+              onClick={(evt) => {
+                evt.preventDefault();
+                handleLogout();
+              }}
+            >
               <span className='header__signout'>Sign out</span>
-            </a>
+            </Link>
           </li>
 
         </ul>

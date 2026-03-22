@@ -5,10 +5,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../../../store';
 import {login} from '../../../store/api-actions.ts';
 import {AppRoute, AuthStatus} from '../../../const.ts';
+import {setLoginError} from '../../../store/reducer.ts';
 
 function LoginPage(): ReactElement {
   const dispatch = useDispatch<AppDispatch>();
-
+  const error = useSelector((state: RootState) => state.offers.loginError);
   const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
@@ -16,11 +17,19 @@ function LoginPage(): ReactElement {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
+    if (!/[a-zA-Z]/.test(password) || !/\d/.test(password)) {
+      dispatch(setLoginError('Пароль должен содержать буквы и цифры'));
+      return;
+    }
+
+    dispatch(setLoginError(null));
     dispatch(login({email, password}));
   };
+
   const authorizationStatus = useSelector(
     (state: RootState) => state.offers.authorizationStatus
   );
+
   if (authorizationStatus === AuthStatus.Auth) {
     return <Navigate to={AppRoute.MainPage} />;
   }
@@ -50,6 +59,7 @@ function LoginPage(): ReactElement {
                 <label className='visually-hidden'>Password</label>
                 <input className='login__input form__input' type='password' name='password' placeholder='Password' required />
               </div>
+              {error && <p style={{color: 'red'}}>{error}</p>}
 
               <button className='login__submit form__submit button' type='submit'>Sign in</button>
 
