@@ -1,6 +1,6 @@
 import {ReactElement} from 'react';
 import {DetailedOffer} from '../../../types/offer.ts';
-import {getRatingWidth} from '../../../utils.ts';
+import {getCapitalized, getRatingWidth} from '../../../utils.ts';
 
 type OfferInfoProps = {
   data: DetailedOffer;
@@ -40,7 +40,7 @@ function OfferInfo({data}: OfferInfoProps): ReactElement {
       </div>
 
       <ul className='offer__features'>
-        <li className='offer__feature offer__feature--entire'>{data.type}</li>
+        <li className='offer__feature offer__feature--entire'>{getCapitalized(data.type)}</li>
         <li className='offer__feature offer__feature--bedrooms'>{data.bedrooms === 1 ? `${data.bedrooms} Bedroom` : `${data.bedrooms} Bedrooms`}</li>
         <li className='offer__feature offer__feature--adults'>Max {data.maxAdults} adults</li>
       </ul>
@@ -66,11 +66,15 @@ function OfferInfo({data}: OfferInfoProps): ReactElement {
 
         <div className='offer__host-user user'>
 
-          <div className='offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper'>
-            <img className='offer__avatar user__avatar' src={host.avatarUrl} width='74' height='74' alt='Host avatar'/>
+          <div
+            className={`offer__avatar-wrapper ${
+              host.isPro ? 'offer__avatar-wrapper--pro' : ''
+            } user__avatar-wrapper`}
+          >
+            <img className="offer__avatar user__avatar" src={host.avatarUrl} width="74" height="74" alt="Host avatar"/>
           </div>
 
-          <span className='offer__user-name'>{host.name}</span>
+          <span className="offer__user-name">{host.name}</span>
           {host.isPro ? <span className="offer__user-status">Pro</span> : null}
 
         </div>
