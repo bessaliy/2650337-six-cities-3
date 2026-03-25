@@ -25,7 +25,7 @@ function ReviewsList({reviews, isAuth, offerId}: ReviewsListProps): ReactElement
         ))}
       </ul>
 
-      {isAuth ? <ReviewForm offerId={offerId}/> : null}
+      {isAuth === AuthStatus.Auth ? <ReviewForm offerId={offerId}/> : null}
     </section>
   );
 }

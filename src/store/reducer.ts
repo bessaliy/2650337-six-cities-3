@@ -13,6 +13,9 @@ export type State = {
   reviews: Review[];
   isLoading: boolean;
   isOfferLoading: boolean;
+  isReviewSubmitting: boolean;
+  isReviewSubmitSuccess: boolean;
+  reviewError: string | null;
   authorizationStatus: AuthStatus;
   userEmail: string | null;
   loginError: string | null;
@@ -25,7 +28,10 @@ const initialState: State = {
   nearbyOffers: [],
   reviews: [],
   isLoading: false,
-  isOfferLoading: false,
+  isOfferLoading: true,
+  isReviewSubmitting: false,
+  isReviewSubmitSuccess: false,
+  reviewError: null,
   authorizationStatus: AuthStatus.Unknown,
   userEmail: null,
   loginError: null,
@@ -61,6 +67,8 @@ const offerSlice = createSlice({
       })
       .addCase(fetchDetailedOffer.pending, (state) => {
         state.isOfferLoading = true;
+        state.currentOffer = null;
+
       })
       .addCase(fetchDetailedOffer.fulfilled, (state, action) => {
         state.currentOffer = action.payload;
@@ -75,8 +83,20 @@ const offerSlice = createSlice({
       .addCase(fetchReviews.fulfilled, (state, action) => {
         state.reviews = action.payload;
       })
+      .addCase(postReview.pending, (state) => {
+        state.isReviewSubmitting = true;
+        state.isReviewSubmitSuccess = false;
+        state.reviewError = null;
+      })
       .addCase(postReview.fulfilled, (state, action) => {
         state.reviews.push(action.payload);
+        state.isReviewSubmitting = false;
+        state.isReviewSubmitSuccess = true;
+      })
+      .addCase(postReview.rejected, (state) => {
+        state.isReviewSubmitting = false;
+        state.isReviewSubmitSuccess = false;
+        state.reviewError = 'Не удалось отправить отзыв';
       });
   },
 });

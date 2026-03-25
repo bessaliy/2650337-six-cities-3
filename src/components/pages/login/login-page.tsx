@@ -16,8 +16,10 @@ function LoginPage(): ReactElement {
     const formData = new FormData(evt.currentTarget);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
+    const digitCheck = /\d/.test(password);
+    const letterCheck = /[a-zA-Z]/.test(password);
 
-    if (!/[a-zA-Z]/.test(password) || !/\d/.test(password)) {
+    if (!digitCheck || !letterCheck) {
       dispatch(setLoginError('Пароль должен содержать буквы и цифры'));
       return;
     }

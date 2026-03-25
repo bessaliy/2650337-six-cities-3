@@ -1,7 +1,7 @@
-import React, { ReactElement, useState } from 'react';
+import React, {ReactElement, useEffect, useState} from 'react';
 import {ReviewLimits} from '../../../const.ts';
-import {useDispatch} from 'react-redux';
-import {AppDispatch} from '../../../store';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from '../../../store';
 import {postReview} from '../../../store/api-actions.ts';
 
 type ReviewFormProps = {
@@ -16,7 +16,15 @@ function ReviewForm({offerId}: ReviewFormProps): ReactElement {
   const dispatch = useDispatch<AppDispatch>();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const error = useSelector((state: RootState) => state.offers.reviewError);
+  const isReviewSubmitSuccess = useSelector((state: RootState) => state.offers.isReviewSubmitSuccess);
+
+  useEffect(() => {
+    if (isReviewSubmitSuccess) {
+      setReviewText('');
+      setRating(null);
+    }
+  }, [isReviewSubmitSuccess]);
 
   const handleSubmit = (evt: React.FormEvent) => {
     evt.preventDefault();
@@ -24,17 +32,7 @@ function ReviewForm({offerId}: ReviewFormProps): ReactElement {
       return;
     }
     setIsSubmitting(true);
-    dispatch(postReview({id: offerId, comment: reviewText, rating}))
-      .then(() => {
-        setReviewText('');
-        setRating(null);
-        setError(null);
-      })
-      .catch(() => {
-        setError('Не удалось отправить отзыв. Попробуйте еще раз');
-      })
-      .finally(() => setIsSubmitting(false));
-
+    dispatch(postReview({id: offerId, comment: reviewText, rating}));
   };
 
   return (

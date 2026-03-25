@@ -9,11 +9,13 @@ function OfferInfo({data}: OfferInfoProps): ReactElement {
   const host = data.host;
   return (
     <>
-      <div className='offer__mark'>
-        <span>Premium</span>
-      </div>
+      {data.isPremium ?
+        <div className="offer__mark">
+          <span>Premium</span>
+        </div> : null}
 
-      <div className='offer__name-wrapper'>
+
+      <div className="offer__name-wrapper">
 
         <h1 className='offer__name'>
           {data.title}
@@ -42,7 +44,7 @@ function OfferInfo({data}: OfferInfoProps): ReactElement {
       <ul className='offer__features'>
         <li className='offer__feature offer__feature--entire'>{getCapitalized(data.type)}</li>
         <li className='offer__feature offer__feature--bedrooms'>{data.bedrooms === 1 ? `${data.bedrooms} Bedroom` : `${data.bedrooms} Bedrooms`}</li>
-        <li className='offer__feature offer__feature--adults'>Max {data.maxAdults} adults</li>
+        <li className='offer__feature offer__feature--adults'>Max {data.maxAdults === 1 ? `${data.maxAdults} adult` : `${data.maxAdults} adults`}</li>
       </ul>
 
       <div className='offer__price'>
