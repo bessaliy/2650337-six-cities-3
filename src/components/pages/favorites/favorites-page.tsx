@@ -12,7 +12,7 @@ import {RootState} from '../../../store';
 function FavoritesPage(): ReactElement {
 
   const favorites = useSelector(getFavorites);
-  const favoritesFlat = favorites.flatMap(item => item.offers);
+  const favoritesFlat = favorites.flatMap((item) => item.offers);
   const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
 
   return (
