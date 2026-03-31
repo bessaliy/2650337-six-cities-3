@@ -23,5 +23,4 @@ function PlaceCardList({ offers, onHoverToggle }: PlaceCardListProps): ReactElem
     </div>
   );
 }
-
 export default PlaceCardList;

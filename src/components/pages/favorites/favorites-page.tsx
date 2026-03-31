@@ -12,7 +12,8 @@ import {RootState} from '../../../store';
 function FavoritesPage(): ReactElement {
 
   const favorites = useSelector(getFavorites);
-  const authorizationStatus = useSelector((state: RootState) => state.offers.authorizationStatus);
+  const favoritesFlat = favorites.flatMap(item => item.offers);
+  const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
 
   return (
     <div className='page'>
@@ -25,7 +26,7 @@ function FavoritesPage(): ReactElement {
 
       <main className='page__main page__main--favorites'>
         <div className='page__favorites-container container'>
-          <FavoritesList offers={favorites}/>
+          <FavoritesList offers={favoritesFlat}/>
         </div>
       </main>
 

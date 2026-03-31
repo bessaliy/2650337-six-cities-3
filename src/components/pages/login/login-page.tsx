@@ -5,11 +5,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../../../store';
 import {login} from '../../../store/api-actions.ts';
 import {AppRoute, AuthStatus} from '../../../const.ts';
-import {setLoginError} from '../../../store/reducer.ts';
+import {setLoginError} from '../../../store/user/user-slice.ts';
 
 function LoginPage(): ReactElement {
   const dispatch = useDispatch<AppDispatch>();
-  const error = useSelector((state: RootState) => state.offers.loginError);
+  const error = useSelector((state: RootState) => state.user.loginError);
   const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
@@ -29,7 +29,7 @@ function LoginPage(): ReactElement {
   };
 
   const authorizationStatus = useSelector(
-    (state: RootState) => state.offers.authorizationStatus
+    (state: RootState) => state.user.authorizationStatus
   );
 
   if (authorizationStatus === AuthStatus.Auth) {

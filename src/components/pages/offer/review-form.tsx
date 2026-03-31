@@ -16,13 +16,14 @@ function ReviewForm({offerId}: ReviewFormProps): ReactElement {
   const dispatch = useDispatch<AppDispatch>();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const error = useSelector((state: RootState) => state.offers.reviewError);
-  const isReviewSubmitSuccess = useSelector((state: RootState) => state.offers.isReviewSubmitSuccess);
+  const error = useSelector((state: RootState) => state.reviews.reviewError);
+  const isReviewSubmitSuccess = useSelector((state: RootState) => state.reviews.isReviewSubmitSuccess);
 
   useEffect(() => {
     if (isReviewSubmitSuccess) {
       setReviewText('');
       setRating(null);
+      setIsSubmitting(false);
     }
   }, [isReviewSubmitSuccess]);
 

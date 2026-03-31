@@ -1,4 +1,4 @@
-import {ReactElement, useState, useEffect} from 'react';
+import {ReactElement, useState, useEffect, useMemo} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {MapName, SortingType} from '../../../const.ts';
 import {RootState} from '../../../store';
@@ -18,14 +18,18 @@ import Spinner from '../../ui/spinner/spinner.tsx';
 function MainPage(): ReactElement {
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
   const [sortingType, setSortingType] = useState<SortingType>(SortingType.Popular);
-
   const city = useSelector((state: RootState) => state.offers.city);
 
   const filteredOffers = useSelector(getFilteredOffers);
 
-  const sortedOffers = getSortedOffers(filteredOffers, sortingType);
+  // const sortedOffers = getSortedOffers(filteredOffers, sortingType);
+  const sortedOffers = useMemo(
+    () => getSortedOffers(filteredOffers, sortingType),
+    [filteredOffers, sortingType]
+  );
+
   const dispatch = useDispatch<AppDispatch>();
-  const authorizationStatus = useSelector((state: RootState) => state.offers.authorizationStatus);
+  const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
 
   useEffect(() => {
     dispatch(fetchOffers());

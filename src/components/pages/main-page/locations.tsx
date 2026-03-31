@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Location from './location.tsx';
 import {CITIES} from '../../../const.ts';
 import {RootState} from '../../../store';
-import {setActiveCity} from '../../../store/reducer.ts';
+import {setActiveCity} from '../../../store/offers/offers-slice.ts';
 
 function Locations(): ReactElement {
   const dispatch = useDispatch();

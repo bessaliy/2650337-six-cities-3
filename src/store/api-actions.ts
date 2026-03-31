@@ -1,7 +1,9 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {DetailedOffer, Offer} from '../types/offer';
 import {AxiosInstance} from 'axios';
-import {setAuthorizationStatus, setLoginError, setUserEmail} from './reducer.ts';
+import {setAuthorizationStatus} from './user/user-slice.ts';
+import {setLoginError} from './user/user-slice.ts';
+import {setUserEmail} from './user/user-slice.ts';
 import {AuthStatus} from '../const.ts';
 import {AuthData} from '../types/auth.ts';
 import {Review} from '../types/review.ts';

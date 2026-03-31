@@ -84,6 +84,7 @@ export enum ReviewLimits {
   Min = 50,
   Max = 300,
 }
+export const ReviewAmount = 10;
 
 export enum NearbyLimits {
   Max = 3,
@@ -92,6 +93,24 @@ export enum NearbyLimits {
 export enum GalleryLimits {
   Max = 6,
 }
+
+export const CardMode = {
+  CitiesView: {
+    name: 'cities',
+    width: 260,
+    height: 200,
+  },
+  FavoritesView: {
+    name: 'favorites',
+    width: 150,
+    height: 110,
+  },
+  OffersView: {
+    name: 'near-places',
+    width: 260,
+    height: 200,
+  },
+};
 
 export enum SortingType {
   Popular = 'Popular',

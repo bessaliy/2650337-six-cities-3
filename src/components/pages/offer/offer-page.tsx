@@ -33,7 +33,7 @@ function OfferPage(): ReactElement {
     }
   }, [id, dispatch]);
 
-  const authorizationStatus = useSelector((state: RootState) => state.offers.authorizationStatus);
+  const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
 
   if (isOfferLoading) {
     return <Spinner />;
