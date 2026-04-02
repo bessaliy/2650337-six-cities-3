@@ -46,7 +46,7 @@ function PlaceCardC(props: PlaceCardProps): ReactElement {
             <span className='place-card__price-text'>&#47;&nbsp;night</span>
           </div>
           <button className={`place-card__bookmark-button button ${
-            props.data.isFavorite ? 'place-card__bookmark-button--active' : ''
+            props.data.isFavorite ? ' place-card__bookmark-button--active' : ''
           }`}
           >
             <svg className='place-card__bookmark-icon' width='18' height='19'>

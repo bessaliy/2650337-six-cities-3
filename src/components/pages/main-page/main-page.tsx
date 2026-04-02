@@ -14,6 +14,7 @@ import UserNav from '../../layout/user-nav.tsx';
 import Locations from './locations.tsx';
 import PlacesSorting from './places-sorting.tsx';
 import Spinner from '../../ui/spinner/spinner.tsx';
+import NoOffersFound from './no-offers-found.tsx';
 
 function MainPage(): ReactElement {
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
@@ -50,7 +51,7 @@ function MainPage(): ReactElement {
         </div>
       </header>
 
-      <main className='page__main page__main--index'>
+      <main className={filteredOffers.length === 0 ? ('page__main page__main--index page__main--index-empty') : ('page__main page__main--index')}>
         <h1 className='visually-hidden'>Cities</h1>
 
         <div className='tabs'>
@@ -58,42 +59,34 @@ function MainPage(): ReactElement {
         </div>
 
         <div className='cities'>
-          <div className='cities__places-container container'>
+          {filteredOffers.length === 0 ? (
+            <NoOffersFound city={city}/>
+          ) : (
+            <div className='cities__places-container container'>
+              <section className='cities__places places'>
+                <h2 className='visually-hidden'>Places</h2>
+                <b className='places__found'>{filteredOffers.length} places to stay in {city.name}</b>
 
-            <section className='cities__places places'>
-              <h2 className='visually-hidden'>Places</h2>
-              <b className='places__found'>{filteredOffers.length} places to stay in {city.name}</b>
-
-              <PlacesSorting
-                currentSorting={sortingType}
-                onSortingChange={setSortingType}
-              />
-
-              {filteredOffers.length === 0 ? (
-                <div className="cities__places-container container">
-                  <section className="cities__no-places">
-                    <b>No places to stay available</b>
-                  </section>
-                </div>
-              ) : (
+                <PlacesSorting
+                  currentSorting={sortingType}
+                  onSortingChange={setSortingType}
+                />
                 <PlaceCardList
                   offers={sortedOffers}
                   onHoverToggle={setActiveOfferId}
                 />
-              )}
-
-            </section>
-
-            <div className='cities__right-section'>
-              <Map
-                offers={sortedOffers}
-                selectedOfferId={activeOfferId}
-                mapName={MapName.Cities}
-                city={city}
-              />
+              </section>
+              <div className="cities__right-section">
+                <Map
+                  offers={sortedOffers}
+                  selectedOfferId={activeOfferId}
+                  mapName={MapName.Cities}
+                  city={city}
+                />
+              </div>
             </div>
+          )}
 
-          </div>
         </div>
 
       </main>
