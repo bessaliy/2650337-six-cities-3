@@ -41,7 +41,7 @@ function LoginPage(): ReactElement {
 
       <header className='header'>
         <div className='container'>
-          <Header />
+          <Header rightSlot={false} />
         </div>
       </header>
 

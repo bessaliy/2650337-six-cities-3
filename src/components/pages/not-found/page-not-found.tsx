@@ -9,7 +9,7 @@ function PageNotFound(): ReactElement {
     <div>
       <header className='header'>
         <div className='container'>
-          <Header />
+          <Header rightSlot={false} />
         </div>
       </header>
 

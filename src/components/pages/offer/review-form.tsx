@@ -1,4 +1,4 @@
-import React, {ReactElement, useEffect, useState} from 'react';
+import React, {memo, ReactElement, useEffect, useState} from 'react';
 import {ReviewLimits} from '../../../const.ts';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../../../store';
@@ -8,7 +8,7 @@ type ReviewFormProps = {
   offerId: string;
 };
 
-function ReviewForm({offerId}: ReviewFormProps): ReactElement {
+function ReviewFormRaw({offerId}: ReviewFormProps): ReactElement {
 
   const [reviewText, setReviewText] = useState('');
   const [rating, setRating] = useState<number | null>(null);
@@ -153,5 +153,5 @@ function ReviewForm({offerId}: ReviewFormProps): ReactElement {
     </form>
   );
 }
-
+const ReviewForm = memo(ReviewFormRaw);
 export default ReviewForm;

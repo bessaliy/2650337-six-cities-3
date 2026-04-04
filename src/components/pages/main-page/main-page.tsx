@@ -10,7 +10,6 @@ import {getFilteredOffers} from '../../../store/selectors.ts';
 import PlaceCardList from '../../place-card/place-card-list.tsx';
 import Map from '../../map/map.tsx';
 import Header from '../../layout/header.tsx';
-import UserNav from '../../layout/user-nav.tsx';
 import Locations from './locations.tsx';
 import PlacesSorting from './places-sorting.tsx';
 import Spinner from '../../ui/spinner/spinner.tsx';
@@ -23,14 +22,12 @@ function MainPage(): ReactElement {
 
   const filteredOffers = useSelector(getFilteredOffers);
 
-  // const sortedOffers = getSortedOffers(filteredOffers, sortingType);
   const sortedOffers = useMemo(
     () => getSortedOffers(filteredOffers, sortingType),
     [filteredOffers, sortingType]
   );
 
   const dispatch = useDispatch<AppDispatch>();
-  const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
 
   useEffect(() => {
     dispatch(fetchOffers());
@@ -47,7 +44,7 @@ function MainPage(): ReactElement {
 
       <header className='header'>
         <div className='container'>
-          <Header rightSlot={<UserNav isAuth={authorizationStatus}/>} />
+          <Header rightSlot />
         </div>
       </header>
 

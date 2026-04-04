@@ -3,24 +3,21 @@ import {Link} from 'react-router-dom';
 import {AppRoute} from '../../../const.ts';
 
 import Header from '../../layout/header.tsx';
-import UserNav from '../../layout/user-nav.tsx';
 import FavoritesList from './favorites-list.tsx';
 import {useSelector} from 'react-redux';
 import {getFavorites} from '../../../store/selectors.ts';
-import {RootState} from '../../../store';
 
 function FavoritesPage(): ReactElement {
 
   const favorites = useSelector(getFavorites);
   const favoritesFlat = favorites.flatMap((item) => item.offers);
-  const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
 
   return (
     <div className='page'>
 
       <header className='header'>
         <div className='container'>
-          <Header rightSlot={<UserNav isAuth={authorizationStatus}/>}/>
+          <Header rightSlot />
         </div>
       </header>
 

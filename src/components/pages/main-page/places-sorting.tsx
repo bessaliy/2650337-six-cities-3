@@ -1,4 +1,4 @@
-import {ReactElement, useState} from 'react';
+import {memo, ReactElement, useState} from 'react';
 import {SortingType} from '../../../const.ts';
 
 type PlacesSortingProps = {
@@ -13,7 +13,7 @@ const sortingOptions = [
   SortingType.TopRatedFirst,
 ];
 
-function PlacesSorting({ currentSorting, onSortingChange }: PlacesSortingProps): ReactElement {
+function PlacesSortingRaw({ currentSorting, onSortingChange }: PlacesSortingProps): ReactElement {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <form className='places__sorting' action='#' method='get'>
@@ -48,5 +48,6 @@ function PlacesSorting({ currentSorting, onSortingChange }: PlacesSortingProps):
     </form>
   );
 }
+const PlacesSorting = memo(PlacesSortingRaw);
 
 export default PlacesSorting;

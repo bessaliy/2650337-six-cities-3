@@ -8,7 +8,6 @@ import {MapName, CardView, NearbyLimits, AppRoute} from '../../../const.ts';
 import Spinner from '../../ui/spinner/spinner.tsx';
 
 import Header from '../../layout/header.tsx';
-import UserNav from '../../layout/user-nav.tsx';
 import PlaceCard from '../../place-card/place-card.tsx';
 import Map from '../../map/map.tsx';
 import OfferInfo from './offer-info.tsx';
@@ -47,7 +46,7 @@ function OfferPage(): ReactElement {
     <div className='page'>
       <header className='header'>
         <div className='container'>
-          <Header rightSlot={<UserNav isAuth={authorizationStatus}/>}/>
+          <Header rightSlot />
         </div>
       </header>
 
