@@ -1,9 +1,9 @@
-import {ReactElement} from 'react';
+import {ReactElement, memo, useMemo} from 'react';
 import ReviewForm from './review-form.tsx';
 import ReviewItem from './review-item.tsx';
 
 import {Review} from '../../../types/review.ts';
-import {AuthStatus} from '../../../const.ts';
+import {AuthStatus, ReviewAmount} from '../../../const.ts';
 
 type ReviewsListProps = {
   reviews: Review[];
@@ -11,13 +11,14 @@ type ReviewsListProps = {
   offerId: string;
 }
 
-function ReviewsList({reviews, isAuth, offerId}: ReviewsListProps): ReactElement {
+function ReviewsListM({reviews, isAuth, offerId}: ReviewsListProps): ReactElement {
+  const visibleReviews = useMemo(() => reviews.length > ReviewAmount ? reviews.slice(0, (ReviewAmount - 1)) : reviews, [reviews]);
   return (
     <section className='offer__reviews reviews'>
       <h2 className='reviews__title'>Reviews &middot; <span className='reviews__amount'>{reviews.length}</span></h2>
 
       <ul className='reviews__list'>
-        {reviews.map((review) => (
+        {visibleReviews.map((review) => (
           <ReviewItem
             key={review.id}
             data={review}
@@ -25,9 +26,9 @@ function ReviewsList({reviews, isAuth, offerId}: ReviewsListProps): ReactElement
         ))}
       </ul>
 
-      {isAuth ? <ReviewForm offerId={offerId}/> : null}
+      {isAuth === AuthStatus.Auth ? <ReviewForm offerId={offerId}/> : null}
     </section>
   );
 }
-
+const ReviewsList = memo(ReviewsListM);
 export default ReviewsList;

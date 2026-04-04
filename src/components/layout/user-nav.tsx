@@ -17,7 +17,7 @@ function UserNav({isAuth}: UserNavProps):ReactElement {
   };
 
   const email = useSelector(
-    (state: RootState) => state.offers.userEmail
+    (state: RootState) => state.user.userEmail
   );
 
   if (isAuth === AuthStatus.Auth) {

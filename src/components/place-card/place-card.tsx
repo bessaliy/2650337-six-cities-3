@@ -1,26 +1,9 @@
-import { ReactElement } from 'react';
+import { ReactElement, memo } from 'react';
 import { Offer } from '../../types/offer.ts';
 import { getRatingWidth } from '../../utils.ts';
 import {Link} from 'react-router-dom';
 import {getCapitalized} from '../../utils.ts';
-
-const CardMode = {
-  CitiesView: {
-    name: 'cities',
-    width: 260,
-    height: 200,
-  },
-  FavoritesView: {
-    name: 'favorites',
-    width: 150,
-    height: 110,
-  },
-  OffersView: {
-    name: 'near-places',
-    width: 260,
-    height: 200,
-  },
-};
+import {CardMode} from '../../const.ts';
 
 type PlaceCardProps = {
   data: Offer;
@@ -28,14 +11,20 @@ type PlaceCardProps = {
   viewMode: keyof typeof CardMode;
 }
 
-function PlaceCard(props: PlaceCardProps): ReactElement {
+function PlaceCardC(props: PlaceCardProps): ReactElement {
   const { name, width, height } = CardMode[props.viewMode];
+  const handleMouseEnter = () => {
+    props.onHoverToggle?.(props.data.id);
+  };
+  const handleMouseLeave = () => {
+    props.onHoverToggle?.(null);
+  };
 
   return (
     <article
       className={`${name}__card place-card`}
-      onMouseEnter={() => props.onHoverToggle?.(props.data.id)}
-      onMouseLeave={() => props.onHoverToggle?.(null)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {props.data.isPremium && (
         <div className='place-card__mark'>
@@ -57,7 +46,7 @@ function PlaceCard(props: PlaceCardProps): ReactElement {
             <span className='place-card__price-text'>&#47;&nbsp;night</span>
           </div>
           <button className={`place-card__bookmark-button button ${
-            props.data.isFavorite ? 'place-card__bookmark-button--active' : ''
+            props.data.isFavorite ? ' place-card__bookmark-button--active' : ''
           }`}
           >
             <svg className='place-card__bookmark-icon' width='18' height='19'>
@@ -84,5 +73,7 @@ function PlaceCard(props: PlaceCardProps): ReactElement {
     </article>
   );
 }
+
+const PlaceCard = memo(PlaceCardC);
 
 export default PlaceCard;

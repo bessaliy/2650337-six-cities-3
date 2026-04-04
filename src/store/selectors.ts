@@ -2,11 +2,16 @@ import {RootState} from './index';
 import {createSelector} from '@reduxjs/toolkit';
 
 const getOffers = (state: RootState) => state.offers.offers;
-export const getCurrentOffer = (state: RootState) => state.offers.currentOffer;
-export const getNearbyOffers = (state: RootState) => state.offers.nearbyOffers;
-export const getReviews = (state: RootState) => state.offers.reviews;
-export const getIsOfferLoading = (state: RootState) => state.offers.isOfferLoading;
+export const getCurrentOffer = (state: RootState) => state.offerDetails.currentOffer;
+export const getNearbyOffers = (state: RootState) => state.offerDetails.nearbyOffers;
+export const getReviewsList = (state: RootState) => state.reviews.reviews;
+export const getIsOfferLoading = (state: RootState) => state.offerDetails.isOfferLoading;
 const getCity = (state: RootState) => state.offers.city;
+
+export const getReviews = createSelector(
+  [getReviewsList],
+  (reviews) => [...reviews].sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+);
 
 export const getFilteredOffers = createSelector(
   [getOffers, getCity],

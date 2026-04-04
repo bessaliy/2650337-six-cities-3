@@ -12,7 +12,7 @@ function Location({city, isActive, onClick}: LocationProps): ReactElement {
   return (
     <li className='locations__item'>
       <Link
-        className={`locations__item-link tabs__item${isActive ? 'tabs__item--active' : ''}`}
+        className={`locations__item-link tabs__item${isActive ? ' tabs__item--active' : ''}`}
         to='#'
         onClick={(evt) => {
           evt.preventDefault();

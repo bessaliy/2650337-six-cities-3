@@ -5,19 +5,21 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../../../store';
 import {login} from '../../../store/api-actions.ts';
 import {AppRoute, AuthStatus} from '../../../const.ts';
-import {setLoginError} from '../../../store/reducer.ts';
+import {setLoginError} from '../../../store/user/user-slice.ts';
 
 function LoginPage(): ReactElement {
   const dispatch = useDispatch<AppDispatch>();
-  const error = useSelector((state: RootState) => state.offers.loginError);
+  const error = useSelector((state: RootState) => state.user.loginError);
   const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
     const formData = new FormData(evt.currentTarget);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
+    const digitCheck = /\d/.test(password);
+    const letterCheck = /[a-zA-Z]/.test(password);
 
-    if (!/[a-zA-Z]/.test(password) || !/\d/.test(password)) {
+    if (!digitCheck || !letterCheck) {
       dispatch(setLoginError('Пароль должен содержать буквы и цифры'));
       return;
     }
@@ -27,7 +29,7 @@ function LoginPage(): ReactElement {
   };
 
   const authorizationStatus = useSelector(
-    (state: RootState) => state.offers.authorizationStatus
+    (state: RootState) => state.user.authorizationStatus
   );
 
   if (authorizationStatus === AuthStatus.Auth) {
