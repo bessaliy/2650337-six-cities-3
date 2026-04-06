@@ -2,10 +2,12 @@ import {RootState} from './index';
 import {createSelector} from '@reduxjs/toolkit';
 
 const getOffers = (state: RootState) => state.offers.offers;
+const getFavorites = (state: RootState) => state.favorites.favorites;
 export const getCurrentOffer = (state: RootState) => state.offerDetails.currentOffer;
 export const getNearbyOffers = (state: RootState) => state.offerDetails.nearbyOffers;
 export const getReviewsList = (state: RootState) => state.reviews.reviews;
 export const getIsOfferLoading = (state: RootState) => state.offerDetails.isOfferLoading;
+export const getAuth = (state: RootState) => state.user.authorizationStatus;
 const getCity = (state: RootState) => state.offers.city;
 
 export const getReviews = createSelector(
@@ -19,11 +21,9 @@ export const getFilteredOffers = createSelector(
     offers.filter((offer) => offer.city.name === city.name)
 );
 
-export const getFavorites = createSelector(
-  [getOffers],
-  (offers) => {
-    const favorites = offers.filter((offer) => offer.isFavorite);
-
+export const getFavoritesOffers = createSelector(
+  [getFavorites],
+  (favorites) => {
     const grouped: Record<string, typeof favorites> = {};
 
     favorites.forEach((offer) => {

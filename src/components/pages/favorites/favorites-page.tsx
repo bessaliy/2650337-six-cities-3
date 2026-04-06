@@ -1,19 +1,33 @@
-import {ReactElement} from 'react';
+import {ReactElement, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../../const.ts';
 
 import Header from '../../layout/header.tsx';
 import FavoritesList from './favorites-list.tsx';
-import {useSelector} from 'react-redux';
-import {getFavorites} from '../../../store/selectors.ts';
+import {useDispatch, useSelector} from 'react-redux';
+import {getFavoritesOffers} from '../../../store/selectors.ts';
+import FavoritesEmpty from './favorites-empty.tsx';
+import {AppDispatch, RootState} from '../../../store';
+import {fetchFavorites} from '../../../store/api-actions.ts';
+import Spinner from '../../ui/spinner/spinner.tsx';
 
 function FavoritesPage(): ReactElement {
+  const favorites = useSelector(getFavoritesOffers);
+  const isEmpty = favorites.length === 0;
 
-  const favorites = useSelector(getFavorites);
-  const favoritesFlat = favorites.flatMap((item) => item.offers);
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(fetchFavorites());
+  }, [dispatch]);
+
+  const isLoading = useSelector((state: RootState) => state.favorites.isLoading);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
-    <div className='page'>
+    <div className={isEmpty ? ('page page--favorites-empty') : ('page')}>
 
       <header className='header'>
         <div className='container'>
@@ -21,9 +35,9 @@ function FavoritesPage(): ReactElement {
         </div>
       </header>
 
-      <main className='page__main page__main--favorites'>
+      <main className={isEmpty ? ('page__main page__main--favorites page__main--favorites-empty') : ('page__main page__main--favorites')}>
         <div className='page__favorites-container container'>
-          <FavoritesList offers={favoritesFlat}/>
+          {isEmpty ? <FavoritesEmpty /> : <FavoritesList favorites={favorites}/> }
         </div>
       </main>
 
