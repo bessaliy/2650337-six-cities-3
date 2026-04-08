@@ -1,4 +1,4 @@
-import {ReactElement} from 'react';
+import {memo, ReactElement} from 'react';
 import {Review} from '../../../types/review.ts';
 import {getReviewRatingWidth, getReviewDate} from '../../../utils.ts';
 
@@ -6,7 +6,7 @@ type ReviewItemProp = {
   data: Review;
 }
 
-function ReviewItem({data}: ReviewItemProp): ReactElement {
+function ReviewItemRaw({data}: ReviewItemProp): ReactElement {
   return (
     <li className='reviews__item'>
       <div className='reviews__user user'>
@@ -34,5 +34,6 @@ function ReviewItem({data}: ReviewItemProp): ReactElement {
     </li>
   );
 }
+const ReviewItem = memo(ReviewItemRaw);
 
 export default ReviewItem;

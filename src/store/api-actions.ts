@@ -20,6 +20,29 @@ export const fetchOffers = createAsyncThunk<
   }
 );
 
+export const fetchFavorites = createAsyncThunk<
+  Offer[],
+  void,
+  {extra: AxiosInstance}
+>('favorites/fetchFavorites',
+  async (_arg, {extra: api}) => {
+    const {data} = await api.get<Offer[]>('/favorite');
+    return data;
+  });
+
+export const toggleFavorites = createAsyncThunk<
+  Offer,
+  { id: string; isFavorite: boolean },
+  {extra: AxiosInstance}
+>(
+  'favorites/toggleFavorites',
+  async ({id, isFavorite}, {extra: api}) => {
+    const status = (isFavorite ? 0 : 1);
+    const {data} = await api.post<Offer>(`/favorite/${id}/${status}`);
+    return data;
+  }
+);
+
 export const fetchDetailedOffer = createAsyncThunk<
   DetailedOffer,
   string,
@@ -43,6 +66,7 @@ export const fetchNearbyOffers = createAsyncThunk<
     return data;
   }
 );
+
 
 export const fetchReviews = createAsyncThunk<
   Review[],

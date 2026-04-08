@@ -1,16 +1,22 @@
-import { ReactElement } from 'react';
-import {Link, Navigate} from 'react-router-dom';
+import {ReactElement, useState, FormEvent} from 'react';
+import {Link, Navigate, useNavigate} from 'react-router-dom';
 import Header from '../../layout/header.tsx';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../../../store';
 import {login} from '../../../store/api-actions.ts';
-import {AppRoute, AuthStatus} from '../../../const.ts';
+import {AppRoute, AuthStatus, CITIES} from '../../../const.ts';
 import {setLoginError} from '../../../store/user/user-slice.ts';
+import {setActiveCity} from '../../../store/offers/offers-slice.ts';
 
 function LoginPage(): ReactElement {
   const dispatch = useDispatch<AppDispatch>();
   const error = useSelector((state: RootState) => state.user.loginError);
-  const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
+  const [randomCity] = useState(
+    () => CITIES[Math.floor(Math.random() * CITIES.length)]
+  );
+  const navigate = useNavigate();
+
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
     const formData = new FormData(evt.currentTarget);
@@ -18,6 +24,7 @@ function LoginPage(): ReactElement {
     const password = formData.get('password') as string;
     const digitCheck = /\d/.test(password);
     const letterCheck = /[a-zA-Z]/.test(password);
+
 
     if (!digitCheck || !letterCheck) {
       dispatch(setLoginError('Пароль должен содержать буквы и цифры'));
@@ -41,7 +48,7 @@ function LoginPage(): ReactElement {
 
       <header className='header'>
         <div className='container'>
-          <Header />
+          <Header rightSlot={false} />
         </div>
       </header>
 
@@ -70,8 +77,14 @@ function LoginPage(): ReactElement {
 
           <section className='locations locations--login locations--current'>
             <div className='locations__item'>
-              <Link className='locations__item-link' to='#'>
-                <span>Amsterdam</span>
+              <Link className='locations__item-link' to='#'
+                onClick={(evt) => {
+                  evt.preventDefault();
+                  dispatch(setActiveCity(randomCity));
+                  navigate(AppRoute.MainPage);
+                }}
+              >
+                <span>{randomCity.name}</span>
               </Link>
             </div>
           </section>

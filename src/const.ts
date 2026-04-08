@@ -118,3 +118,5 @@ export enum SortingType {
   PriceHighToLow = 'Price: high to low',
   TopRatedFirst = 'Top rated first',
 }
+
+export const RatingStars = [5, 4, 3, 2, 1];

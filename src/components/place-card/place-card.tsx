@@ -1,9 +1,12 @@
-import { ReactElement, memo } from 'react';
-import { Offer } from '../../types/offer.ts';
-import { getRatingWidth } from '../../utils.ts';
-import {Link} from 'react-router-dom';
-import {getCapitalized} from '../../utils.ts';
-import {CardMode} from '../../const.ts';
+import {memo, ReactElement} from 'react';
+import {Offer} from '../../types/offer.ts';
+import {getCapitalized, getRatingWidth} from '../../utils.ts';
+import {Link, useNavigate} from 'react-router-dom';
+import {AppRoute, AuthStatus, CardMode} from '../../const.ts';
+import {useDispatch, useSelector} from 'react-redux';
+import {getAuth} from '../../store/selectors.ts';
+import {AppDispatch} from '../../store';
+import {toggleFavorites} from '../../store/api-actions.ts';
 
 type PlaceCardProps = {
   data: Offer;
@@ -13,11 +16,24 @@ type PlaceCardProps = {
 
 function PlaceCardC(props: PlaceCardProps): ReactElement {
   const { name, width, height } = CardMode[props.viewMode];
+  const {id, isFavorite} = props.data;
+  const navigate = useNavigate();
+  const isAuth = useSelector(getAuth);
+  const dispatch = useDispatch<AppDispatch>();
+
   const handleMouseEnter = () => {
     props.onHoverToggle?.(props.data.id);
   };
   const handleMouseLeave = () => {
     props.onHoverToggle?.(null);
+  };
+
+  const handleFavoriteClick = () => {
+    if (isAuth !== AuthStatus.Auth) {
+      navigate(AppRoute.LoginPage);
+    } else {
+      dispatch(toggleFavorites({id, isFavorite}));
+    }
   };
 
   return (
@@ -48,6 +64,7 @@ function PlaceCardC(props: PlaceCardProps): ReactElement {
           <button className={`place-card__bookmark-button button ${
             props.data.isFavorite ? ' place-card__bookmark-button--active' : ''
           }`}
+          onClick = {handleFavoriteClick}
           >
             <svg className='place-card__bookmark-icon' width='18' height='19'>
               <use xlinkHref='#icon-bookmark'></use>

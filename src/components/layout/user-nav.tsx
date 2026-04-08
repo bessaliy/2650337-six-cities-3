@@ -11,6 +11,9 @@ type UserNavProps = {
 
 function UserNav({isAuth}: UserNavProps):ReactElement {
   const dispatch = useDispatch<AppDispatch>();
+  const favoritesCount = useSelector(
+    (state: RootState) => state.favorites.favorites.length
+  );
 
   const handleLogout = () => {
     dispatch(logout());
@@ -26,10 +29,10 @@ function UserNav({isAuth}: UserNavProps):ReactElement {
         <ul className='header__nav-list'>
 
           <li className='header__nav-item user'>
-            <Link className='header__nav-link header__nav-link--profile' to='#'>
+            <Link className='header__nav-link header__nav-link--profile' to={AppRoute.FavoritesPage}>
               <div className='header__avatar-wrapper user__avatar-wrapper'></div>
               <span className='header__user-name user__name'>{email}</span>
-              <span className='header__favorite-count'>3</span>
+              <span className='header__favorite-count'>{favoritesCount}</span>
             </Link>
           </li>
 

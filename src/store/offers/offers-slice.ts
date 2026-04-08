@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {CITIES} from '../../const.ts';
 import {Offer} from '../../types/offer.ts';
-import {fetchOffers} from '../api-actions.ts';
+import {fetchOffers, toggleFavorites} from '../api-actions.ts';
 
 type OffersState = {
   city: typeof CITIES[number];
@@ -34,6 +34,12 @@ const offersSlice = createSlice({
       })
       .addCase(fetchOffers.rejected, (state) => {
         state.isLoading = false;
+      })
+      .addCase(toggleFavorites.fulfilled, (state, action) => {
+        const changedOffer = action.payload;
+        state.offers = state.offers.map((offer) =>
+          offer.id === changedOffer.id ? changedOffer : offer
+        );
       });
   },
 });

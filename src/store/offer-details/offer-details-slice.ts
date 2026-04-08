@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {DetailedOffer, Offer} from '../../types/offer.ts';
-import {fetchDetailedOffer, fetchNearbyOffers} from '../api-actions.ts';
+import {fetchDetailedOffer, fetchNearbyOffers, toggleFavorites} from '../api-actions.ts';
 
 type OffersDetailsState = {
   currentOffer: DetailedOffer | null;
@@ -23,7 +23,6 @@ const offerDetailsSlice = createSlice({
       .addCase(fetchDetailedOffer.pending, (state) => {
         state.isOfferLoading = true;
         state.currentOffer = null;
-
       })
       .addCase(fetchDetailedOffer.fulfilled, (state, action) => {
         state.currentOffer = action.payload;
@@ -34,6 +33,12 @@ const offerDetailsSlice = createSlice({
       })
       .addCase(fetchNearbyOffers.fulfilled, (state, action) => {
         state.nearbyOffers = action.payload;
+      })
+      .addCase(toggleFavorites.fulfilled, (state, action) => {
+        const toggledOffer = action.payload;
+        if (state.currentOffer?.id === toggledOffer.id) {
+          state.currentOffer.isFavorite = toggledOffer.isFavorite;
+        }
       });
   },
 });

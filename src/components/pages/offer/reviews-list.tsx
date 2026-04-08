@@ -1,4 +1,4 @@
-import {ReactElement, memo, useMemo} from 'react';
+import {ReactElement, useMemo} from 'react';
 import ReviewForm from './review-form.tsx';
 import ReviewItem from './review-item.tsx';
 
@@ -11,7 +11,7 @@ type ReviewsListProps = {
   offerId: string;
 }
 
-function ReviewsListM({reviews, isAuth, offerId}: ReviewsListProps): ReactElement {
+function ReviewsList({reviews, isAuth, offerId}: ReviewsListProps): ReactElement {
   const visibleReviews = useMemo(() => reviews.length > ReviewAmount ? reviews.slice(0, (ReviewAmount - 1)) : reviews, [reviews]);
   return (
     <section className='offer__reviews reviews'>
@@ -30,5 +30,4 @@ function ReviewsListM({reviews, isAuth, offerId}: ReviewsListProps): ReactElemen
     </section>
   );
 }
-const ReviewsList = memo(ReviewsListM);
 export default ReviewsList;

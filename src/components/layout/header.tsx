@@ -1,12 +1,16 @@
-import {ReactElement, ReactNode} from 'react';
+import {memo, ReactElement} from 'react';
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../const.ts';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store';
+import UserNav from './user-nav.tsx';
 
 type HeaderProps = {
-  rightSlot?: ReactNode;
+  rightSlot: boolean;
 }
 
-function Header({rightSlot}: HeaderProps):ReactElement {
+function HeaderRaw({rightSlot}: HeaderProps):ReactElement {
+  const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
   return (
     <div className='header__wrapper'>
 
@@ -16,10 +20,10 @@ function Header({rightSlot}: HeaderProps):ReactElement {
         </Link>
       </div>
 
-      {rightSlot}
+      {rightSlot ? <UserNav isAuth={authorizationStatus} /> : ''}
 
     </div>
   );
 }
-
+const Header = memo(HeaderRaw);
 export default Header;

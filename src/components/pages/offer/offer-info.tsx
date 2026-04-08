@@ -1,12 +1,29 @@
 import {ReactElement} from 'react';
 import {DetailedOffer} from '../../../types/offer.ts';
 import {getCapitalized, getRatingWidth} from '../../../utils.ts';
+import {AppRoute, AuthStatus} from '../../../const.ts';
+import {toggleFavorites} from '../../../store/api-actions.ts';
+import {useDispatch, useSelector} from 'react-redux';
+import {getAuth} from '../../../store/selectors.ts';
+import {useNavigate} from 'react-router-dom';
+import {AppDispatch} from '../../../store';
 
 type OfferInfoProps = {
   data: DetailedOffer;
 }
 function OfferInfo({data}: OfferInfoProps): ReactElement {
   const host = data.host;
+  const {id, isFavorite} = data;
+  const isAuth = useSelector(getAuth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const handleFavoriteClick = () => {
+    if (isAuth !== AuthStatus.Auth) {
+      navigate(AppRoute.LoginPage);
+    } else {
+      dispatch(toggleFavorites({id, isFavorite}));
+    }
+  };
   return (
     <>
       {data.isPremium ?
@@ -21,7 +38,12 @@ function OfferInfo({data}: OfferInfoProps): ReactElement {
           {data.title}
         </h1>
 
-        <button className='offer__bookmark-button button' type='button'>
+        <button className={`offer__bookmark-button button  ${
+          data.isFavorite ? 'offer__bookmark-button--active' : ''
+        }`}
+        type='button'
+        onClick={handleFavoriteClick}
+        >
           <svg className='offer__bookmark-icon' width='31' height='33'>
             <use xlinkHref='#icon-bookmark'></use>
           </svg>
