@@ -12,7 +12,7 @@ type ReviewsListProps = {
 }
 
 function ReviewsList({reviews, isAuth, offerId}: ReviewsListProps): ReactElement {
-  const visibleReviews = useMemo(() => reviews.length > ReviewAmount ? reviews.slice(0, (ReviewAmount - 1)) : reviews, [reviews]);
+  const visibleReviews = useMemo(() => reviews.length > ReviewAmount ? reviews.slice(0, (ReviewAmount)) : reviews, [reviews]);
   return (
     <section className='offer__reviews reviews'>
       <h2 className='reviews__title'>Reviews &middot; <span className='reviews__amount'>{reviews.length}</span></h2>
