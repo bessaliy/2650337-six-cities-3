@@ -30,15 +30,14 @@ export const fetchFavorites = createAsyncThunk<
     return data;
   });
 
-export const toggleFavorites = createAsyncThunk<
-  Offer,
-  { id: string; isFavorite: boolean },
+export const fetchReviews = createAsyncThunk<
+  Review[],
+  string,
   {extra: AxiosInstance}
 >(
-  'favorites/toggleFavorites',
-  async ({id, isFavorite}, {extra: api}) => {
-    const status = (isFavorite ? 0 : 1);
-    const {data} = await api.post<Offer>(`/favorite/${id}/${status}`);
+  '/reviews/fetchReviews',
+  async (id, {extra: api}) => {
+    const {data} = await api.get<Review[]>(`/comments/${id}`);
     return data;
   }
 );
@@ -67,19 +66,6 @@ export const fetchNearbyOffers = createAsyncThunk<
   }
 );
 
-
-export const fetchReviews = createAsyncThunk<
-  Review[],
-  string,
-  {extra: AxiosInstance}
->(
-  '/reviews/fetchReviews',
-  async (id, {extra: api}) => {
-    const {data} = await api.get<Review[]>(`/comments/${id}`);
-    return data;
-  }
-);
-
 export const postReview = createAsyncThunk<
   Review,
   {id: string; comment: string; rating: number},
@@ -89,23 +75,6 @@ export const postReview = createAsyncThunk<
   async ({id, comment, rating}, {extra: api}) => {
     const {data} = await api.post<Review>(`/comments/${id}`, {comment, rating});
     return data;
-  }
-);
-
-export const checkAuth = createAsyncThunk<
-  void,
-  void,
-  { extra: AxiosInstance }
->(
-  'user/checkAuth',
-  async (_arg, {dispatch, extra: api}) => {
-    try {
-      const {data} = await api.get<AuthData>('/login');
-      dispatch(setAuthorizationStatus(AuthStatus.Auth));
-      dispatch(setUserEmail(data.email));
-    } catch {
-      dispatch(setAuthorizationStatus(AuthStatus.NoAuth));
-    }
   }
 );
 
@@ -141,5 +110,35 @@ export const logout = createAsyncThunk<
 
     dispatch(setAuthorizationStatus(AuthStatus.NoAuth));
     dispatch(setUserEmail(null));
+  }
+);
+
+
+export const checkAuth = createAsyncThunk<
+  void,
+  void,
+  { extra: AxiosInstance }
+>(
+  'user/checkAuth',
+  async (_arg, {dispatch, extra: api}) => {
+    try {
+      const {data} = await api.get<AuthData>('/login');
+      dispatch(setAuthorizationStatus(AuthStatus.Auth));
+      dispatch(setUserEmail(data.email));
+    } catch {
+      dispatch(setAuthorizationStatus(AuthStatus.NoAuth));
+    }
+  }
+);
+export const toggleFavorites = createAsyncThunk<
+  Offer,
+  { id: string; isFavorite: boolean },
+  {extra: AxiosInstance}
+>(
+  'favorites/toggleFavorites',
+  async ({id, isFavorite}, {extra: api}) => {
+    const status = (isFavorite ? 0 : 1);
+    const {data} = await api.post<Offer>(`/favorite/${id}/${status}`);
+    return data;
   }
 );

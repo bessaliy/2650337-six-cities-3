@@ -1,4 +1,4 @@
-import { Offer } from '../types/offer.ts';
+import {DetailedOffer, Offer} from '../types/offer.ts';
 import {CITIES} from '../const.ts';
 
 const cityParis = CITIES.find((city) => city.name === 'Paris')!;
@@ -8,7 +8,7 @@ const cityAmsterdam = CITIES.find((city) => city.name === 'Amsterdam')!;
 const cityHamburg = CITIES.find((city) => city.name === 'Hamburg')!;
 const cityDusseldorf = CITIES.find((city) => city.name === 'Dusseldorf')!;
 
-export const mockData: Offer[] = [
+export const MockData: Offer[] = [
   {
     'id': '3e91b7f2-5c4a-4d89-9a2f-7b6c1e0d2f43',
     'title': 'Beautiful & luxurious studio at great location',
@@ -346,4 +346,144 @@ export const mockData: Offer[] = [
     'previewImage': 'https://15.design.htmlacademy.pro/static/hotel/1.jpg'
   }
 ];
+
+export const MockDataInitial : Offer[] = [
+  {
+    'id': '3e91b7f2-5c4a-4d89-9a2f-7b6c1e0d2f43',
+    'title': 'Beautiful & luxurious studio at great location',
+    'type': 'apartment',
+    'price': 120,
+    'city': cityParis,
+    'location': {
+      'latitude': 48.8649553943508,
+      'longitude': 2.34909666406198,
+      'zoom': 8
+    },
+    'isFavorite': false,
+    'isPremium': false,
+    'rating': 4,
+    'previewImage': 'https://15.design.htmlacademy.pro/static/hotel/10.jpg'
+  },
+  {
+    'id': 'a7c2d1e9-8f34-4b6a-b912-5e7f3c2a9d10',
+    'title': 'Elegant studio wrapped in shadows and quiet luxury',
+    'type': 'room',
+    'price': 110,
+    'city': cityAmsterdam,
+    'location': {
+      'latitude': 52.3609553943508,
+      'longitude': 4.85309666406198,
+      'zoom': 8
+    },
+    'isFavorite': false,
+    'isPremium': true,
+    'rating': 3,
+    'previewImage': 'https://15.design.htmlacademy.pro/static/hotel/11.jpg'
+  },
+];
+
+export const ChangedOffer: Offer = {
+  'id': '3e91b7f2-5c4a-4d89-9a2f-7b6c1e0d2f43',
+  'title': 'Beautiful & luxurious studio at great location',
+  'type': 'apartment',
+  'price': 120,
+  'city': cityParis,
+  'location': {
+    'latitude': 48.8649553943508,
+    'longitude': 2.34909666406198,
+    'zoom': 8
+  },
+  'isFavorite': true,
+  'isPremium': false,
+  'rating': 4,
+  'previewImage': 'https://15.design.htmlacademy.pro/static/hotel/10.jpg'
+};
+export const ChangedOfferFalse: Offer = {
+  'id': '3e91b7f2-5c4a-4d89-9a2f-7b6c1e0d2f43',
+  'title': 'Beautiful & luxurious studio at great location',
+  'type': 'apartment',
+  'price': 120,
+  'city': cityParis,
+  'location': {
+    'latitude': 48.8649553943508,
+    'longitude': 2.34909666406198,
+    'zoom': 8
+  },
+  'isFavorite': false,
+  'isPremium': false,
+  'rating': 4,
+  'previewImage': 'https://15.design.htmlacademy.pro/static/hotel/10.jpg'
+};
+
+export const MockDataExpected: Offer[] = [
+  {
+    'id': '3e91b7f2-5c4a-4d89-9a2f-7b6c1e0d2f43',
+    'title': 'Beautiful & luxurious studio at great location',
+    'type': 'apartment',
+    'price': 120,
+    'city': cityParis,
+    'location': {
+      'latitude': 48.8649553943508,
+      'longitude': 2.34909666406198,
+      'zoom': 8
+    },
+    'isFavorite': true,
+    'isPremium': false,
+    'rating': 4,
+    'previewImage': 'https://15.design.htmlacademy.pro/static/hotel/10.jpg'
+  },
+  {
+    'id': 'a7c2d1e9-8f34-4b6a-b912-5e7f3c2a9d10',
+    'title': 'Elegant studio wrapped in shadows and quiet luxury',
+    'type': 'room',
+    'price': 110,
+    'city': cityAmsterdam,
+    'location': {
+      'latitude': 52.3609553943508,
+      'longitude': 4.85309666406198,
+      'zoom': 8
+    },
+    'isFavorite': false,
+    'isPremium': true,
+    'rating': 3,
+    'previewImage': 'https://15.design.htmlacademy.pro/static/hotel/11.jpg'
+  },
+];
+
+export const MockDetailedOffer: DetailedOffer = {
+  'id': '6af6f711-c28d-4121-82cd-e0b462a27f00',
+  'title': 'Beautiful & luxurious studio at great location',
+  'type': 'apartment',
+  'price': 120,
+  'city': {
+    'name': 'Amsterdam',
+    'location': {
+      'latitude': 52.35514938496378,
+      'longitude': 4.673877537499948,
+      'zoom': 8
+    }
+  },
+  'location': {
+    'latitude': 52.35514938496378,
+    'longitude': 4.673877537499948,
+    'zoom': 8
+  },
+  'isFavorite': false,
+  'isPremium': false,
+  'rating': 4,
+  'description': 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
+  'bedrooms': 3,
+  'goods': [
+    'Heating'
+  ],
+  'host': {
+    'name': 'Oliver Conner',
+    'avatarUrl': 'https://url-to-image/image.png',
+    'isPro': false
+  },
+  'images': [
+    'https://url-to-image/image.png'
+  ],
+  'maxAdults': 4
+};
 
