@@ -398,6 +398,22 @@ export const ChangedOffer: Offer = {
   'rating': 4,
   'previewImage': 'https://15.design.htmlacademy.pro/static/hotel/10.jpg'
 };
+export const ChangedOfferFalse: Offer = {
+  'id': '3e91b7f2-5c4a-4d89-9a2f-7b6c1e0d2f43',
+  'title': 'Beautiful & luxurious studio at great location',
+  'type': 'apartment',
+  'price': 120,
+  'city': cityParis,
+  'location': {
+    'latitude': 48.8649553943508,
+    'longitude': 2.34909666406198,
+    'zoom': 8
+  },
+  'isFavorite': false,
+  'isPremium': false,
+  'rating': 4,
+  'previewImage': 'https://15.design.htmlacademy.pro/static/hotel/10.jpg'
+};
 
 export const MockDataExpected: Offer[] = [
   {
