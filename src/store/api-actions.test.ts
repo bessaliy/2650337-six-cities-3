@@ -2,12 +2,24 @@ import {configureMockStore} from '@jedmao/redux-mock-store';
 import {vi} from 'vitest';
 import thunk from 'redux-thunk';
 import {MockData, MockDetailedOffer} from '../mock/mock-data.ts';
-import {fetchDetailedOffer, fetchFavorites, fetchNearbyOffers, fetchOffers, fetchReviews} from './api-actions.ts';
-import {MockReviews} from '../mock/mock-reviews.ts';
+import {
+  checkAuth,
+  fetchDetailedOffer,
+  fetchFavorites,
+  fetchNearbyOffers,
+  fetchOffers,
+  fetchReviews, login, logout,
+  postReview, toggleFavorites
+} from './api-actions.ts';
+import {MockReviews, MockReviewToPush} from '../mock/mock-reviews.ts';
 import type { AnyAction } from 'redux';
+import {setAuthorizationStatus, setLoginError, setUserEmail} from './user/user-slice.ts';
+import {AuthStatus} from '../const.ts';
+import {AxiosInstance} from 'axios';
 
 const mockAPI = {
   get: vi.fn(),
+  post: vi.fn(),
 };
 
 const mockStore = configureMockStore([
@@ -213,6 +225,264 @@ describe('fetchNearbyOffers thunk', () => {
     expect(error.message).toBe('API Error');
     expect(mockAPI.get).toHaveBeenCalledTimes(1);
     expect(mockAPI.get).toHaveBeenCalledWith('/offers/1/nearby');
+  });
+});
+
+describe('postReview thunk', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+  it('should dispatch postReview fulfilled when API call is successful', async() => {
+    mockAPI.post.mockResolvedValue({
+      data: MockReviewToPush,
+    });
+
+    const store = mockStore();
+
+    await store.dispatch(postReview({
+      id: MockReviewToPush.id,
+      comment: MockReviewToPush.comment,
+      rating: MockReviewToPush.rating
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as any);
+    const actions = store.getActions();
+
+    expect(actions.length).toBe(2);
+    expectPendingAndFulfilled(actions, postReview);
+    expect(actions[1].payload).toEqual(MockReviewToPush);
+    expect(mockAPI.post).toHaveBeenCalledTimes(1);
+    expect(mockAPI.post).toHaveBeenCalledWith(
+      `/comments/${MockReviewToPush.id}`,
+      {
+        comment: MockReviewToPush.comment,
+        rating: MockReviewToPush.rating
+      });
+  });
+  it('should dispatch postReview rejected when API call fails', async() => {
+    mockAPI.post.mockRejectedValue(new Error('API Error'));
+    const store = mockStore();
+
+    await store.dispatch(postReview({
+      id: MockReviewToPush.id,
+      comment: MockReviewToPush.comment,
+      rating: MockReviewToPush.rating
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as any);
+    const actions = store.getActions();
+    const error = actions[1].error as { message: string };
+
+    expect(actions.length).toBe(2);
+    expectPendingAndRejected(actions, postReview);
+    expect(error.message).toBe('API Error');
+    expect(mockAPI.post).toHaveBeenCalledTimes(1);
+    expect(mockAPI.post).toHaveBeenCalledWith(
+      `/comments/${MockReviewToPush.id}`,
+      {
+        comment: MockReviewToPush.comment,
+        rating: MockReviewToPush.rating
+      });
+  });
+});
+
+describe('login thunk', () => {
+  it('should dispatch login actions when API call is successful', async () => {
+    const mockAuthData = {
+      email: 'test@mail.com',
+      token: '123pass',
+    };
+
+    mockAPI.post.mockResolvedValue({
+      data: mockAuthData,
+    });
+
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+
+    const store = mockStore();
+
+    await store.dispatch(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      login({ email: 'test@mail.com', password: '123pass' }) as any
+    );
+
+    const actions = store.getActions();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    expect(actions.map((a) => a.type)).toEqual([
+      login.pending.type,
+      setAuthorizationStatus.type,
+      setUserEmail.type,
+      setLoginError.type,
+      login.fulfilled.type,
+    ]);
+
+    expect(setItemSpy).toHaveBeenCalledWith('token', '123pass');
+
+    expect(actions[1].payload).toBe(AuthStatus.Auth);
+    expect(actions[2].payload).toBe('test@mail.com');
+    expect(actions[3].payload).toBe(null);
+
+    expect(mockAPI.post).toHaveBeenCalledWith('/login', {
+      email: 'test@mail.com',
+      password: '123pass',
+    });
+  });
+});
+
+describe('logout thunk', () => {
+  it('should dispatch logout actions and clear token', () => {
+    const dispatch = vi.fn();
+
+    const removeItemSpy = vi.spyOn(Storage.prototype, 'removeItem');
+
+    logout()(dispatch, () => ({}), {} as AxiosInstance);
+
+    expect(removeItemSpy).toHaveBeenCalledWith('token');
+
+    expect(dispatch).toHaveBeenCalledWith(
+      setAuthorizationStatus(AuthStatus.NoAuth)
+    );
+
+    expect(dispatch).toHaveBeenCalledWith(
+      setUserEmail(null)
+    );
+  });
+  it('should dispatch error when API call fails', async () => {
+    mockAPI.post.mockRejectedValue(new Error('401'));
+
+    const store = mockStore();
+
+    await store.dispatch(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      login({ email: 'test@mail.com', password: '123pass' }) as any
+    );
+
+    const actions = store.getActions();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    expect(actions.map((a) => a.type)).toEqual([
+      login.pending.type,
+      setLoginError.type,
+      login.fulfilled.type,
+    ]);
+
+    expect(actions[1].payload).toBe('Неверный email или пароль');
+  });
+});
+
+describe('checkAuth thunk', () => {
+  it('should dispatch auth actions when API call is successful', async () => {
+    const mockAuthData = {
+      email: 'test@mail.com',
+      token: '123',
+    };
+
+    mockAPI.get.mockResolvedValue({
+      data: mockAuthData,
+    });
+
+    const store = mockStore();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await store.dispatch(checkAuth() as any);
+
+    const actions = store.getActions();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    expect(actions.map((a) => a.type)).toEqual([
+      checkAuth.pending.type,
+      setAuthorizationStatus.type,
+      setUserEmail.type,
+      checkAuth.fulfilled.type,
+    ]);
+
+    expect(actions[1].payload).toBe(AuthStatus.Auth);
+    expect(actions[2].payload).toBe('test@mail.com');
+
+    expect(mockAPI.get).toHaveBeenCalledWith('/login');
+  });
+  it('should dispatch NoAuth when API call fails', async () => {
+    mockAPI.get.mockRejectedValue(new Error('401'));
+
+    const store = mockStore();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await store.dispatch(checkAuth() as any);
+
+    const actions = store.getActions();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    expect(actions.map((a) => a.type)).toEqual([
+      checkAuth.pending.type,
+      setAuthorizationStatus.type,
+      checkAuth.fulfilled.type,
+    ]);
+
+    expect(actions[1].payload).toBe(AuthStatus.NoAuth);
+
+    expect(mockAPI.get).toHaveBeenCalledWith('/login');
+  });
+});
+
+describe('toggleFavorites thunk', () => {
+  it('should dispatch fulfilled and call API with status 0 when offer is favorite', async () => {
+    const mockOffer = MockData[0]; // или любой mock Offer
+
+    mockAPI.post.mockResolvedValue({
+      data: mockOffer,
+    });
+
+    const store = mockStore();
+
+    await store.dispatch(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      toggleFavorites({ id: '1', isFavorite: true }) as any
+    );
+
+    const actions = store.getActions();
+
+    expect(actions.length).toBe(2);
+    expectPendingAndFulfilled(actions, toggleFavorites);
+
+    expect(actions[1].payload).toEqual(mockOffer);
+
+    expect(mockAPI.post).toHaveBeenCalledWith('/favorite/1/0');
+  });
+  it('should dispatch fulfilled and call API with status 1 when offer is not favorite', async () => {
+    const mockOffer = MockData[0];
+
+    mockAPI.post.mockResolvedValue({
+      data: mockOffer,
+    });
+
+    const store = mockStore();
+
+    await store.dispatch(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      toggleFavorites({ id: '1', isFavorite: false }) as any
+    );
+
+    const actions = store.getActions();
+
+    expect(actions.length).toBe(2);
+    expectPendingAndFulfilled(actions, toggleFavorites);
+
+    expect(actions[1].payload).toEqual(mockOffer);
+
+    expect(mockAPI.post).toHaveBeenCalledWith('/favorite/1/1');
+  });
+  it('should dispatch rejected when API call fails', async () => {
+    mockAPI.post.mockRejectedValue(new Error('API Error'));
+
+    const store = mockStore();
+
+    await store.dispatch(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      toggleFavorites({ id: '1', isFavorite: false }) as any
+    );
+
+    const actions = store.getActions();
+    const error = actions[1].error as { message: string };
+
+    expect(actions.length).toBe(2);
+    expectPendingAndRejected(actions, toggleFavorites);
+
+    expect(error.message).toBe('API Error');
   });
 });
 

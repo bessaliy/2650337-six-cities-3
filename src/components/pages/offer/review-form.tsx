@@ -16,7 +16,8 @@ function ReviewFormRaw({offerId}: ReviewFormProps): ReactElement {
   const isSubmitDisabled = rating === null || reviewText.length < +ReviewLimits.Min || reviewText.length > +ReviewLimits.Max;
   const dispatch = useDispatch<AppDispatch>();
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSubmitting = useSelector((state: RootState) => state.reviews.isReviewSubmitting);
   const error = useSelector((state: RootState) => state.reviews.reviewError);
   const isReviewSubmitSuccess = useSelector((state: RootState) => state.reviews.isReviewSubmitSuccess);
 
@@ -24,17 +25,29 @@ function ReviewFormRaw({offerId}: ReviewFormProps): ReactElement {
     if (isReviewSubmitSuccess) {
       setReviewText('');
       setRating(null);
-      setIsSubmitting(false);
+      // setIsSubmitting(false);
+
+      // setTimeout(() => {
+      //   setIsSubmitting(false);
+      // }, 150);
     }
   }, [isReviewSubmitSuccess]);
-
+  //
+  // useEffect(() => {
+  //   if (error) {
+  //     setIsSubmitting(false);
+  //   }
+  // }, [error]);
   const handleSubmit = (evt: React.FormEvent) => {
     evt.preventDefault();
-    if(rating === null) {
+
+    if (rating === null) {
       return;
     }
-    setIsSubmitting(true);
-    dispatch(postReview({id: offerId, comment: reviewText, rating}));
+    //
+    // setIsSubmitting(true);
+
+    dispatch(postReview({ id: offerId, comment: reviewText, rating }));
   };
 
   return (
@@ -47,7 +60,7 @@ function ReviewFormRaw({offerId}: ReviewFormProps): ReactElement {
 
       <label className='reviews__label form__label' htmlFor='review'>Your review</label>
 
-      <div className='reviews__rating-form form__rating'>
+      <div className='reviews__rating-form form__rating'>а
         <input
           className='form__rating-input visually-hidden'
           name='rating'
@@ -56,6 +69,8 @@ function ReviewFormRaw({offerId}: ReviewFormProps): ReactElement {
           type='radio'
           onChange={() => setRating(5)}
           checked={rating === 5}
+          disabled={isSubmitting}
+          readOnly
         />
         <label htmlFor='5-stars' className='reviews__rating-label form__rating-label' title='perfect'>
           <svg className='form__star-image' width='37' height='33'>
@@ -71,6 +86,8 @@ function ReviewFormRaw({offerId}: ReviewFormProps): ReactElement {
           type='radio'
           onChange={() => setRating(4)}
           checked={rating === 4}
+          disabled={isSubmitting}
+          readOnly
         />
         <label htmlFor='4-stars' className='reviews__rating-label form__rating-label' title='good'>
           <svg className='form__star-image' width='37' height='33'>
@@ -86,6 +103,8 @@ function ReviewFormRaw({offerId}: ReviewFormProps): ReactElement {
           type='radio'
           onChange={() => setRating(3)}
           checked={rating === 3}
+          disabled={isSubmitting}
+          readOnly
         />
         <label htmlFor='3-stars' className='reviews__rating-label form__rating-label' title='not bad'>
           <svg className='form__star-image' width='37' height='33'>
@@ -101,6 +120,8 @@ function ReviewFormRaw({offerId}: ReviewFormProps): ReactElement {
           type='radio'
           onChange={() => setRating(2)}
           checked={rating === 2}
+          disabled={isSubmitting}
+          readOnly
         />
         <label htmlFor='2-stars' className='reviews__rating-label form__rating-label' title='badly'>
           <svg className='form__star-image' width='37' height='33'>
@@ -112,12 +133,14 @@ function ReviewFormRaw({offerId}: ReviewFormProps): ReactElement {
           className='form__rating-input visually-hidden'
           name='rating'
           value='1'
-          id='1-star'
+          id='1-stars'
           type='radio'
           onChange={() => setRating(1)}
           checked={rating === 1}
+          disabled={isSubmitting}
+          readOnly
         />
-        <label htmlFor='1-star' className='reviews__rating-label form__rating-label' title='terribly'>
+        <label htmlFor='1-stars' className='reviews__rating-label form__rating-label' title='terribly'>
           <svg className='form__star-image' width='37' height='33'>
             <use xlinkHref='#icon-star'></use>
           </svg>
@@ -132,6 +155,7 @@ function ReviewFormRaw({offerId}: ReviewFormProps): ReactElement {
         placeholder='Tell how was your stay, what you like and what can be improved'
         value={reviewText}
         onChange={(e) => setReviewText(e.target.value)}
+        disabled={isSubmitting}
       />
 
       <div className='reviews__button-wrapper'>
