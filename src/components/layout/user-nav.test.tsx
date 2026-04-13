@@ -1,10 +1,12 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import { AuthStatus } from '../../const';
 
+const mockDispatch = vi.fn();
+
 vi.mock('react-redux', () => ({
-  useDispatch: () => vi.fn(),
+  useDispatch: () => mockDispatch,
   useSelector: (selector: (state: unknown) => unknown) =>
     selector({
       user: {
@@ -40,4 +42,16 @@ describe('Component: UserNav', () => {
 
     expect(screen.getByText(/sign in/i)).toBeInTheDocument();
   });
+  it('should call logout on sign out click', () => {
+    render(
+      <MemoryRouter>
+        <UserNav isAuth={AuthStatus.Auth} />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByText(/sign out/i));
+
+    expect(mockDispatch).toHaveBeenCalled();
+  });
+
 });

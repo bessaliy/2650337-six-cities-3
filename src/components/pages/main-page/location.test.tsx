@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import {fireEvent, render, screen} from '@testing-library/react';
+import {BrowserRouter, MemoryRouter} from 'react-router-dom';
 import Location from './location';
 import {City} from '../../../types/city.ts';
+import {vi} from 'vitest';
 
 const mockCity = {
   name: 'Paris',
@@ -38,5 +39,26 @@ describe('Component: Location', () => {
 
     const link = screen.getByRole('link', { name: /paris/i });
     expect(link).not.toHaveClass('tabs__item--active');
+  });
+  it('should call onClick with city when clicked', () => {
+    const mockClick = vi.fn();
+
+    const city = {
+      name: 'Paris',
+    } as any;
+
+    render(
+      <MemoryRouter>
+        <Location
+          city={city}
+          isActive={false}
+          onClick={mockClick}
+        />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByText('Paris'));
+
+    expect(mockClick).toHaveBeenCalledWith(city);
   });
 });

@@ -1,9 +1,5 @@
 import {City} from './types/city.ts';
 
-export const Setting = {
-  cardsAmount: 5
-};
-
 export const CITIES: City[] = [
   {
     name: 'Paris',
@@ -119,4 +115,3 @@ export enum SortingType {
   TopRatedFirst = 'Top rated first',
 }
 
-export const RatingStars = [5, 4, 3, 2, 1];

@@ -2,10 +2,6 @@ import { Offer } from './types/offer.ts';
 import {Review} from './types/review.ts';
 import { SortingType } from './const';
 
-
-export function getRandomCards<T>(data: T[], count: number): T[] {
-  return [...data].sort(() => Math.random() - 0.5).slice(0, count);
-}
 export function getRatingWidth(props: Offer): string {
   return `${Math.round(props.rating) * 20}%`;
 }
@@ -42,5 +38,3 @@ export function getSortedOffers(offers: Offer[], sortingType: SortingType): Offe
       return sortedOffers;
   }
 }
-
-// export const getOfferRoute = (id: string) => `/offer/${id}`;
