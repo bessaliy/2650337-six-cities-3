@@ -45,7 +45,7 @@ describe('Component: Location', () => {
 
     const city = {
       name: 'Paris',
-    } as any;
+    } as City;
 
     render(
       <MemoryRouter>

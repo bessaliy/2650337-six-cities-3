@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import PlaceCard from './place-card';
 import { AuthStatus } from '../../const';
+import {Offer} from '../../types/offer.ts';
 
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom');
@@ -27,7 +28,7 @@ describe('Component: PlaceCard', () => {
     isFavorite: false,
     isPremium: false,
     previewImage: 'img.jpg',
-  } as any;
+  } as Offer;
 
   it('should call onHoverToggle on mouse enter and leave', () => {
     const mockHover = vi.fn();

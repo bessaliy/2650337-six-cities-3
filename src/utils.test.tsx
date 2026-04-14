@@ -7,15 +7,17 @@ import {
 } from './utils';
 
 import { SortingType } from './const';
+import {Offer} from './types/offer.ts';
+import {Review} from './types/review.ts';
 
 describe('Utils functions', () => {
 
   it('should calculate rating width correctly', () => {
-    expect(getRatingWidth({ rating: 4 } as any)).toBe('80%');
+    expect(getRatingWidth({ rating: 4 } as Offer)).toBe('80%');
   });
 
   it('should calculate review rating width correctly', () => {
-    expect(getReviewRatingWidth({ rating: 3 } as any)).toBe('60%');
+    expect(getReviewRatingWidth({ rating: 3 } as Review)).toBe('60%');
   });
 
   it('should format review date correctly', () => {
@@ -31,7 +33,7 @@ describe('Utils functions', () => {
     const offers = [
       { price: 200, rating: 4 },
       { price: 100, rating: 5 },
-    ] as any;
+    ] as Offer[];
 
     const result = getSortedOffers(offers, SortingType.PriceLowToHigh);
 
@@ -42,7 +44,7 @@ describe('Utils functions', () => {
     const offers = [
       { price: 100, rating: 4 },
       { price: 200, rating: 5 },
-    ] as any;
+    ] as Offer[];
 
     const result = getSortedOffers(offers, SortingType.PriceHighToLow);
 
@@ -53,7 +55,7 @@ describe('Utils functions', () => {
     const offers = [
       { price: 100, rating: 3 },
       { price: 200, rating: 5 },
-    ] as any;
+    ] as Offer[];
 
     const result = getSortedOffers(offers, SortingType.TopRatedFirst);
 
@@ -64,7 +66,7 @@ describe('Utils functions', () => {
     const offers = [
       { price: 100, rating: 3 },
       { price: 200, rating: 5 },
-    ] as any;
+    ] as Offer[];
 
     const result = getSortedOffers(offers, SortingType.Popular);
 
