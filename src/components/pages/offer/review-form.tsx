@@ -3,7 +3,6 @@ import {ReviewLimits} from '../../../const.ts';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../../../store';
 import {postReview} from '../../../store/api-actions.ts';
-// import {RatingStars} from '../../../const.ts';
 
 type ReviewFormProps = {
   offerId: string;
@@ -16,7 +15,6 @@ function ReviewFormRaw({offerId}: ReviewFormProps): ReactElement {
   const isSubmitDisabled = rating === null || reviewText.length < +ReviewLimits.Min || reviewText.length > +ReviewLimits.Max;
   const dispatch = useDispatch<AppDispatch>();
 
-  // const [isSubmitting, setIsSubmitting] = useState(false);
   const isSubmitting = useSelector((state: RootState) => state.reviews.isReviewSubmitting);
   const error = useSelector((state: RootState) => state.reviews.reviewError);
   const isReviewSubmitSuccess = useSelector((state: RootState) => state.reviews.isReviewSubmitSuccess);
@@ -25,27 +23,16 @@ function ReviewFormRaw({offerId}: ReviewFormProps): ReactElement {
     if (isReviewSubmitSuccess) {
       setReviewText('');
       setRating(null);
-      // setIsSubmitting(false);
 
-      // setTimeout(() => {
-      //   setIsSubmitting(false);
-      // }, 150);
     }
   }, [isReviewSubmitSuccess]);
-  //
-  // useEffect(() => {
-  //   if (error) {
-  //     setIsSubmitting(false);
-  //   }
-  // }, [error]);
+
   const handleSubmit = (evt: React.FormEvent) => {
     evt.preventDefault();
 
     if (rating === null) {
       return;
     }
-    //
-    // setIsSubmitting(true);
 
     dispatch(postReview({ id: offerId, comment: reviewText, rating }));
   };
